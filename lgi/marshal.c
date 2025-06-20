@@ -366,7 +366,7 @@ marshal_2c_array (lua_State *L, GITypeInfo *ti, GIArrayType atype,
 	  /* Find out how long array should we allocate. */
 	  zero_terminated = gi_type_info_is_zero_terminated (ti);
 	  objlen = lua_objlen (L, narg);
-          if (atype != GI_ARRAY_TYPE_C || !gi_type_info_get_array_fixed_size (ti, (gsize *)&out_size))
+          if (atype != GI_ARRAY_TYPE_C || !gi_type_info_get_array_fixed_size (ti, (gsize *)out_size))
 	    *out_size = objlen;
 	  else if (*out_size < objlen)
 	    objlen = *out_size;
