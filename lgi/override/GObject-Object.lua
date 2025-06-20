@@ -259,7 +259,7 @@ local function marshal_property(obj, name, flags, gtype, marshaller, ...)
    local mode = select('#', ...) > 0 and 'WRITABLE' or 'READABLE'
    if not flags[mode] then
       error(("%s: `%s' not %s"):format(core.object.query(obj, 'repo')._name,
-				       name, core.downcase(mode)))
+                                       name, core.downcase(mode)))
    end
    local value = Value(gtype)
    if mode == 'WRITABLE' then
@@ -278,14 +278,13 @@ function Object:_access_property(object, prop, ...)
       local typeinfo = prop.typeinfo
       local gtype = Type.from_typeinfo(typeinfo)
       local marshaller = Value.find_marshaller(gtype, typeinfo,
-					       prop.transfer)
-      return marshal_property(object, prop.name,
-			      repo.GObject.ParamFlags[prop.flags],
-			      gtype, marshaller, ...)
+                                               prop.transfer)
+      return marshal_property(object, prop.name, prop.flags,
+                              gtype, marshaller, ...)
    else
       -- pspec-based property
       return marshal_property(object, prop.name, prop.flags, prop.value_type,
-			      Value.find_marshaller(prop.value_type), ...)
+                              Value.find_marshaller(prop.value_type), ...)
    end
 end
 

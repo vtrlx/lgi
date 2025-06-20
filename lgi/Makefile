@@ -12,7 +12,7 @@ LUA_LIBDIR = $(PREFIX)/lib/lua/$(LUA_VERSION)
 LUA_SHAREDIR = $(PREFIX)/share/lua/$(LUA_VERSION)
 
 PKG_CONFIG ?= pkg-config
-GINAME = gobject-introspection-1.0
+GINAME = girepository-2.0
 PKGS = $(GINAME) gmodule-2.0 libffi
 VERSION_FILE = version.lua
 
@@ -52,7 +52,7 @@ DEPCHECK = .depcheck
 
 # Precondition check
 $(DEPCHECK) : Makefile
-	$(PKG_CONFIG) --exists '$(GINAME) >= 0.10.8' --print-errors
+	$(PKG_CONFIG) --exists '$(GINAME) >= 2.80.0' --print-errors
 	touch $@
 
 .PHONY : all clean install
