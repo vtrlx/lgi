@@ -190,6 +190,9 @@ array_get_or_set_length (GITypeInfo *ti, gssize *get_length, gssize set_length,
 	    return;
 	  gi_callable_info_load_arg (GI_CALLABLE_INFO (ci), param, &ai);
 	  eti = gi_arg_info_get_type_info (&ai);
+          /* Without explicitly incrementing the ref count on eti, it will be
+             made into garbage when clearing ai. */
+          gi_base_info_ref (eti);
 	  if (gi_arg_info_get_direction (&ai) == GI_DIRECTION_IN)
 	    /* For input parameters, value is directly pointed to by args
 	       table element. */
