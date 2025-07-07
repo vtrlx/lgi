@@ -25,7 +25,8 @@ CCSHARED = -fPIC
 endif
 endif
 
-PKGS = gio-2.0 cairo cairo-gobject gobject-introspection-1.0 gmodule-2.0 libffi
+GINAME = girepository-2.0
+PKGS = gio-2.0 cairo cairo-gobject $(GINAME) gmodule-2.0 libffi
 LUA = lua
 LUA_LIB = -llua
 PKG_CONFIG ?= pkg-config
@@ -42,7 +43,7 @@ DEPCHECK = .depcheck
 
 # Precondition check
 $(DEPCHECK) : Makefile
-	$(PKG_CONFIG) --exists '$(PKGS) >= 0.10.8' --print-errors
+	$(PKG_CONFIG) --exists '$(PKGS) >= 2.80.0' --print-errors
 	touch $@
 
 REGRESS = $(PFX)regress$(EXT)
@@ -67,7 +68,7 @@ check-lua : Regress-1.0.typelib
 $(REGRESS) : regress.o
 	$(CC) $(ALL_LDFLAGS) -o $@ regress.o $(LIBS)
 
-GIDATADIR = $(shell $(PKG_CONFIG) --variable=gidatadir gobject-introspection-1.0)/tests
+GIDATADIR = $(shell $(PKG_CONFIG) --variable=gidatadir $(GINAME))/tests
 
 regress.o : $(GIDATADIR)/regress.c $(GIDATADIR)/regress.h $(DEPCHECK)
 	$(CC) $(CPPFLAGS) $(ALL_CFLAGS) -c -o $@ $<

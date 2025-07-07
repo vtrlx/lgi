@@ -35,8 +35,7 @@ function pango.glyphstring()
       local offset = items[i].offset
       local length = items[i].length
       local analysis = items[i].analysis
-      local pgs = Pango.GlyphString()
-      Pango.shape(string.sub(s,1+offset), length, analysis, pgs)
+      local pgs = Pango.shape(string.sub(s,1+offset), length, analysis)
       -- Pull out individual glyphs with pgs.glyphs
       local glyphs = pgs.glyphs
       check(type(glyphs) == 'table')

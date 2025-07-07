@@ -220,6 +220,7 @@ end
 function class.load_interface(namespace, info)
    -- Load all components of the interface.
    local interface = component.create(info, class.interface_mt)
+   interface._name = info.name
    interface._property = load_properties(info)
    interface._method = component.get_category(info.methods, load_method)
    interface._signal = component.get_category(

@@ -14,19 +14,25 @@ local lgi = require 'lgi'
 
 local check = testsuite.check
 local checkv = testsuite.checkv
+local gtk, gtk3, gtk4
 local gtk = testsuite.group.new('gtk')
 local is_gtk4 = lgi.Gtk.version >= "4"
+if is_gtk4 then
+   gtk4 = gtk
+   gtk3 = {} -- Empty—these tests will not run.
+else
+   gtk3 = gtk
+   gtk4 = {} -- Empty—these tests will not run.
+end
 
-if not is_gtk4 then
-  function gtk.widget_style()
-     local Gtk = lgi.Gtk
-     local GObject = lgi.GObject
-     local w = Gtk.ProgressBar()
-     local v = GObject.Value(GObject.Type.INT)
-     w:style_get_property('xspacing', v)
-     checkv(w.style.xspacing, v.value, 'number')
-     check(not pcall(function() return w.style.nonexistent end))
-  end
+function gtk3.widget_style()
+   local Gtk = lgi.Gtk
+   local GObject = lgi.GObject
+   local w = Gtk.ProgressBar()
+   local v = GObject.Value(GObject.Type.INT)
+   w:style_get_property('xspacing', v)
+   checkv(w.style.xspacing, v.value, 'number')
+   check(not pcall(function() return w.style.nonexistent end))
 end
 
 function gtk.buildable_id()
@@ -37,80 +43,78 @@ function gtk.buildable_id()
    checkv(w.id, 'label_id', 'string')
 end
 
-if not is_gtk4 then
-  function gtk.container_property()
-     local Gtk = lgi.Gtk
-     local GObject = lgi.GObject
-     local c, w, v = Gtk.Grid(), Gtk.Label()
-     c:add(w)
+function gtk3.container_property()
+   local Gtk = lgi.Gtk
+   local GObject = lgi.GObject
+   local c, w, v = Gtk.Grid(), Gtk.Label()
+   c:add(w)
 
-     c.property[w].left_attach = 1
-     v = GObject.Value(GObject.Type.INT)
-     c:child_get_property(w, 'left-attach', v)
-     checkv(v.value, 1, 'number')
-     v.value = 2
-     c:child_set_property(w, 'left-attach', v)
-     checkv(c.property[w].left_attach, 2)
-     check(not pcall(function() c.property[w].notexistent = 1 end))
-  end
+   c.property[w].left_attach = 1
+   v = GObject.Value(GObject.Type.INT)
+   c:child_get_property(w, 'left-attach', v)
+   checkv(v.value, 1, 'number')
+   v.value = 2
+   c:child_set_property(w, 'left-attach', v)
+   checkv(c.property[w].left_attach, 2)
+   check(not pcall(function() c.property[w].notexistent = 1 end))
+end
 
-  function gtk.container_add_method()
-     local Gtk = lgi.Gtk
-     local c, w
-     c, w = Gtk.Grid(), Gtk.Label()
-     c:add(w)
-     check(w.parent == c)
+function gtk3.container_add_method()
+   local Gtk = lgi.Gtk
+   local c, w
+   c, w = Gtk.Grid(), Gtk.Label()
+   c:add(w)
+   check(w.parent == c)
 
-     c, w = Gtk.Grid(), Gtk.Label()
-     c:add { w, left_attach = 0, width = 2 }
-     check(w.parent == c)
-     checkv(c.property[w].left_attach, 0, 'number')
-     checkv(c.property[w].width, 2, 'number')
+   c, w = Gtk.Grid(), Gtk.Label()
+   c:add { w, left_attach = 0, width = 2 }
+   check(w.parent == c)
+   checkv(c.property[w].left_attach, 0, 'number')
+   checkv(c.property[w].width, 2, 'number')
 
-     c, w = Gtk.Grid(), Gtk.Label()
-     c:add(w, { left_attach = 0, width = 2 })
-     check(w.parent == c)
-     checkv(c.property[w].left_attach, 0, 'number')
-     checkv(c.property[w].width, 2, 'number')
-  end
+   c, w = Gtk.Grid(), Gtk.Label()
+   c:add(w, { left_attach = 0, width = 2 })
+   check(w.parent == c)
+   checkv(c.property[w].left_attach, 0, 'number')
+   checkv(c.property[w].width, 2, 'number')
+end
 
-  function gtk.container_add_child()
-     local Gtk = lgi.Gtk
-     local c, w
-     c, w = Gtk.Grid(), Gtk.Label()
-     c.child = w
-     check(w.parent == c)
+function gtk3.container_add_child()
+   local Gtk = lgi.Gtk
+   local c, w
+   c, w = Gtk.Grid(), Gtk.Label()
+   c.child = w
+   check(w.parent == c)
 
-     c, w = Gtk.Grid(), Gtk.Label()
-     c.child = { w, left_attach = 0, width = 2 }
-     check(w.parent == c)
-     checkv(c.property[w].left_attach, 0, 'number')
-     checkv(c.property[w].width, 2, 'number')
-  end
+   c, w = Gtk.Grid(), Gtk.Label()
+   c.child = { w, left_attach = 0, width = 2 }
+   check(w.parent == c)
+   checkv(c.property[w].left_attach, 0, 'number')
+   checkv(c.property[w].width, 2, 'number')
+end
 
-  function gtk.container_add_ctor()
-     local Gtk = lgi.Gtk
-     local l1, l2 = Gtk.Label(), Gtk.Label()
-     local c = Gtk.Grid { { l1, width = 2 }, { l2, height = 3 } }
-     check(l1.parent == c)
-     check(l2.parent == c)
-     checkv(c.property[l1].width, 2, 'number')
-     checkv(c.property[l2].height, 3, 'number')
-  end
+function gtk3.container_add_ctor()
+   local Gtk = lgi.Gtk
+   local l1, l2 = Gtk.Label(), Gtk.Label()
+   local c = Gtk.Grid { { l1, width = 2 }, { l2, height = 3 } }
+   check(l1.parent == c)
+   check(l2.parent == c)
+   checkv(c.property[l1].width, 2, 'number')
+   checkv(c.property[l2].height, 3, 'number')
+end
 
-  function gtk.container_child_find()
-     local Gtk = lgi.Gtk
-     local l1, l2 = Gtk.Label { id = 'id_l1' }, Gtk.Label { id = 'id_l2' }
-     local c = Gtk.Grid {
-        { l1, width = 2 },
-        Gtk.Grid { id = 'in_g', { l2, height = 3 } }
-     }
+function gtk3.container_child_find()
+   local Gtk = lgi.Gtk
+   local l1, l2 = Gtk.Label { id = 'id_l1' }, Gtk.Label { id = 'id_l2' }
+   local c = Gtk.Grid {
+     { l1, width = 2 },
+     Gtk.Grid { id = 'in_g', { l2, height = 3 } }
+   }
 
-     check(c.child.id_l1 == l1)
-     check(c.child.id_l2 == l2)
-     check(c.child.id_l2.parent == c.child.in_g)
-     check(c.child.notexistent == nil)
-  end
+   check(c.child.id_l1 == l1)
+   check(c.child.id_l2 == l2)
+   check(c.child.id_l2.parent == c.child.in_g)
+   check(c.child.notexistent == nil)
 end
 
 local uidef = [[
@@ -170,61 +174,59 @@ local uidef = [[
 </interface>
 ]]
 
-if not is_gtk4 then
-  function gtk.builder_add_from_string()
-     local Gtk = lgi.Gtk
-     local b = Gtk.Builder()
-     local res, err = b:add_from_string('syntax error')
-     check(not res and lgi.GLib.Error:is_type_of(err))
-     res, err = b:add_from_string(uidef)
-     check(res and not err)
-     check(b:get_object('window1'))
-  end
+function gtk3.builder_add_from_string()
+   local Gtk = lgi.Gtk
+   local b = Gtk.Builder()
+   local res, err = b:add_from_string('syntax error')
+   check(not res and lgi.GLib.Error:is_type_of(err))
+   res, err = b:add_from_string(uidef)
+   check(res and not err)
+   check(b:get_object('window1'))
+end
 
-  function gtk.builder_add_objects_from_string()
-     local Gtk = lgi.Gtk
-     local b = Gtk.Builder()
-     check(b:add_objects_from_string(uidef, -1, { 'statusbar1', 'label1' }))
-     check(b:get_object('statusbar1') and b:get_object('label1'))
-     check(not b:get_object('window1') and not b:get_object('toolbar1'))
-  end
+function gtk3.builder_add_objects_from_string()
+   local Gtk = lgi.Gtk
+   local b = Gtk.Builder()
+   check(b:add_objects_from_string(uidef, -1, { 'statusbar1', 'label1' }))
+   check(b:get_object('statusbar1') and b:get_object('label1'))
+   check(not b:get_object('window1') and not b:get_object('toolbar1'))
+end
 
-  function gtk.builder_add_from_file()
-     local Gtk = lgi.Gtk
-     local tempname = os.tmpname()
-     local tempfile = io.open(tempname, 'w+')
-     tempfile:write(uidef)
-     tempfile:close()
-     local b = Gtk.Builder()
-     local res, err = b:add_from_string('syntax error')
-     check(not res and lgi.GLib.Error:is_type_of(err))
-     res, err = b:add_from_file(tempname)
-     check(res and not err)
-     check(b:get_object('window1'))
-     os.remove(tempname)
-  end
+function gtk3.builder_add_from_file()
+   local Gtk = lgi.Gtk
+   local tempname = os.tmpname()
+   local tempfile = io.open(tempname, 'w+')
+   tempfile:write(uidef)
+   tempfile:close()
+   local b = Gtk.Builder()
+   local res, err = b:add_from_string('syntax error')
+   check(not res and lgi.GLib.Error:is_type_of(err))
+   res, err = b:add_from_file(tempname)
+   check(res and not err)
+   check(b:get_object('window1'))
+   os.remove(tempname)
+end
 
-  function gtk.builder_add_objects_from_file()
-     local Gtk = lgi.Gtk
-     local tempname = os.tmpname()
-     local tempfile = io.open(tempname, 'w+')
-     tempfile:write(uidef)
-     tempfile:close()
-     local b = Gtk.Builder()
-     check(b:add_objects_from_file(tempname, { 'statusbar1', 'label1' }))
-     check(b:get_object('statusbar1') and b:get_object('label1'))
-     check(not b:get_object('window1') and not b:get_object('toolbar1'))
-     os.remove(tempname)
-  end
+function gtk3.builder_add_objects_from_file()
+   local Gtk = lgi.Gtk
+   local tempname = os.tmpname()
+   local tempfile = io.open(tempname, 'w+')
+   tempfile:write(uidef)
+   tempfile:close()
+   local b = Gtk.Builder()
+   check(b:add_objects_from_file(tempname, { 'statusbar1', 'label1' }))
+   check(b:get_object('statusbar1') and b:get_object('label1'))
+   check(not b:get_object('window1') and not b:get_object('toolbar1'))
+   os.remove(tempname)
+end
 
-  function gtk.builder_objects()
-     local Gtk = lgi.Gtk
-     local builder = Gtk.Builder()
-     check(builder:add_from_string(uidef))
-     check(builder.objects.window1 == builder:get_object('window1'))
-     check(builder.objects.statusbar1 == builder:get_object('statusbar1'))
-     check(not builder.objects.notexistent)
-  end
+function gtk3.builder_objects()
+   local Gtk = lgi.Gtk
+   local builder = Gtk.Builder()
+   check(builder:add_from_string(uidef))
+   check(builder.objects.window1 == builder:get_object('window1'))
+   check(builder.objects.statusbar1 == builder:get_object('statusbar1'))
+   check(not builder.objects.notexistent)
 end
 
 function gtk.text_tag_table_ctor()
@@ -245,27 +247,25 @@ function gtk.text_tag_table_tag()
    check(t.tag.notexist == nil)
 end
 
-if not is_gtk4 then
-  function gtk.liststore()
-     local Gtk = lgi.Gtk
-     local GObject = lgi.GObject
-     local cols = { int = 1, string = 2 }
-     local store = Gtk.ListStore.new { GObject.Type.INT, GObject.Type.STRING }
-     local first = store:insert(0, { [cols.int] = 42, [cols.string] = 'hello' })
-     checkv(store:get_value(first, cols.int - 1).value, 42, 'number')
-     checkv(store[first][cols.int], 42, 'number')
-     checkv(store:get_value(first, cols.string - 1).value, 'hello', 'string')
-     checkv(store[first][cols.string], 'hello', 'string')
-     store[first] = { [cols.string] = 'changed' }
-     checkv(store[first][cols.string], 'changed', 'string')
-     checkv(store[first][cols.int], 42, 'number')
-     store[first][cols.int] = 16
-     checkv(store[first][cols.string], 'changed', 'string')
-     checkv(store[first][cols.int], 16, 'number')
-  end
+function gtk3.liststore()
+   local Gtk = lgi.Gtk
+   local GObject = lgi.GObject
+   local cols = { int = 1, string = 2 }
+   local store = Gtk.ListStore.new { GObject.Type.INT, GObject.Type.STRING }
+   local first = store:insert(0, { [cols.int] = 42, [cols.string] = 'hello' })
+   checkv(store:get_value(first, cols.int - 1).value, 42, 'number')
+   checkv(store[first][cols.int], 42, 'number')
+   checkv(store:get_value(first, cols.string - 1).value, 'hello', 'string')
+   checkv(store[first][cols.string], 'hello', 'string')
+   store[first] = { [cols.string] = 'changed' }
+   checkv(store[first][cols.string], 'changed', 'string')
+   checkv(store[first][cols.int], 42, 'number')
+   store[first][cols.int] = 16
+   checkv(store[first][cols.string], 'changed', 'string')
+   checkv(store[first][cols.int], 16, 'number')
 end
 
-function gtk.treestore()
+function gtk3.treestore()
    local Gtk = lgi.Gtk
    local GObject = lgi.GObject
    local cols = { int = 1, string = 2 }
@@ -284,7 +284,7 @@ function gtk.treestore()
    checkv(store[first][cols.int], 16, 'number')
 end
 
-function gtk.treeiter()
+function gtk3.treeiter()
    local Gtk = lgi.Gtk
    local GObject = lgi.GObject
    local giter = Gtk.TreeIter()
@@ -299,7 +299,7 @@ function gtk.treeiter()
    check(giter ~= niter)
 end
 
-function gtk.treemodel_pairs()
+function gtk3.treemodel_pairs()
    local Gtk = lgi.Gtk
    local GObject = lgi.GObject
    local cols = { int = 1, string = 2 }
@@ -338,75 +338,73 @@ function gtk.treemodel_pairs()
    check(count == 0)
 end
 
-if not is_gtk4 then
-  function gtk.treeview()
-     local Gtk = lgi.Gtk
-     local GObject = lgi.GObject
-     local cols = { int = 1, string = 2 }
-     local store = Gtk.TreeStore.new { GObject.Type.INT, GObject.Type.STRING }
-     local renderer = Gtk.CellRendererText { id = 'renderer' }
-     local column = Gtk.TreeViewColumn {
-        id = 'column',
-        { renderer, { text = cols.int } },
-        { Gtk.CellRendererText {}, expand = true, pack = 'end',
-          function(column, cell, model, iter)
-             return model[iter][cols.string]:toupper()
-          end },
-     }
+function gtk3.treeview()
+   local Gtk = lgi.Gtk
+   local GObject = lgi.GObject
+   local cols = { int = 1, string = 2 }
+   local store = Gtk.TreeStore.new { GObject.Type.INT, GObject.Type.STRING }
+   local renderer = Gtk.CellRendererText { id = 'renderer' }
+   local column = Gtk.TreeViewColumn {
+      id = 'column',
+      { renderer, { text = cols.int } },
+      { Gtk.CellRendererText {}, expand = true, pack = 'end',
+        function(column, cell, model, iter)
+           return model[iter][cols.string]:toupper()
+        end },
+   }
 
-     local view = Gtk.TreeView {
-        id = 'view',
-        model = store,
-        column
-     }
-     -- Check that column is accessible by its 'id' attribute.
-     check(view.child.view == view)
-     check(view.child.column == column)
+   local view = Gtk.TreeView {
+      id = 'view',
+      model = store,
+      column
+   }
+   -- Check that column is accessible by its 'id' attribute.
+   check(view.child.view == view)
+   check(view.child.column == column)
 
-     -- Check that renderer is accessible by its 'id' attribute.
-     check(view.child.renderer == renderer)
-  end
-
-  function gtk.actiongroup_add()
-     local Gtk = lgi.Gtk
-     -- Adding normal action and action with an accelerator.
-     local ag = Gtk.ActionGroup()
-     local a1, a2 = Gtk.Action { name = 'a1' }, Gtk.Action { name = 'a2' }
-     ag:add(a1)
-     check(#ag:list_actions() == 1)
-     check(ag:get_action('a1') == a1)
-     ag:add { a2, accelerator = '<control>A' }
-     check(#ag:list_actions() == 2)
-     check(ag:get_action('a2') == a2)
-
-     -- Adding a group of radio actions, this time inside the group ctor.
-     local chosen
-     a1 = Gtk.RadioAction { name = 'a1', value = 1 }
-     a2 = Gtk.RadioAction { name = 'a2', value = 2 }
-     ag = Gtk.ActionGroup {
-        { a1, { a2, accelerator = '<control>a' },
-          on_change = function(action) chosen = action end }
-     }
-     check(#ag:list_actions() == 2)
-     check(ag:get_action('a1') == a1)
-     check(ag:get_action('a2') == a2)
-     check(chosen == nil)
-     a1:activate()
-     check(chosen == a1)
-     a2:activate()
-     check(chosen == a2)
-  end
-
-  function gtk.actiongroup_index()
-     local Gtk = lgi.Gtk
-     local a1, a2 = Gtk.Action { name = 'a1' }, Gtk.Action { name = 'a2' }
-     local ag = Gtk.ActionGroup { a1, a2 }
-     check(ag.action.a1 == a1)
-     check(ag.action.a2 == a2)
-  end
+   -- Check that renderer is accessible by its 'id' attribute.
+   check(view.child.renderer == renderer)
 end
 
-function gtk.treemodelsort_method()
+function gtk3.actiongroup_add()
+   local Gtk = lgi.Gtk
+   -- Adding normal action and action with an accelerator.
+   local ag = Gtk.ActionGroup()
+   local a1, a2 = Gtk.Action { name = 'a1' }, Gtk.Action { name = 'a2' }
+   ag:add(a1)
+   check(#ag:list_actions() == 1)
+   check(ag:get_action('a1') == a1)
+   ag:add { a2, accelerator = '<control>A' }
+   check(#ag:list_actions() == 2)
+   check(ag:get_action('a2') == a2)
+
+   -- Adding a group of radio actions, this time inside the group ctor.
+   local chosen
+   a1 = Gtk.RadioAction { name = 'a1', value = 1 }
+   a2 = Gtk.RadioAction { name = 'a2', value = 2 }
+   ag = Gtk.ActionGroup {
+      { a1, { a2, accelerator = '<control>a' },
+        on_change = function(action) chosen = action end }
+   }
+   check(#ag:list_actions() == 2)
+   check(ag:get_action('a1') == a1)
+   check(ag:get_action('a2') == a2)
+   check(chosen == nil)
+   a1:activate()
+   check(chosen == a1)
+   a2:activate()
+   check(chosen == a2)
+end
+
+function gtk3.actiongroup_index()
+   local Gtk = lgi.Gtk
+   local a1, a2 = Gtk.Action { name = 'a1' }, Gtk.Action { name = 'a2' }
+   local ag = Gtk.ActionGroup { a1, a2 }
+   check(ag.action.a1 == a1)
+   check(ag.action.a2 == a2)
+end
+
+function gtk3.treemodelsort_method()
    local Gtk = lgi.Gtk
    -- Shouldn't error when making TreePath, only print warning
    local noop = Gtk.TreeModelSort().set_sort_func

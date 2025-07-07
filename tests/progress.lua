@@ -11,6 +11,7 @@
 local lgi = require 'lgi'
 local Gio = lgi.Gio
 local GLib = lgi.GLib
+local GObject = lgi.GObject
 
 local check = testsuite.check
 
@@ -46,6 +47,7 @@ function progress.file_copy()
     end
 
     src:copy_async(dst, flags, priority, cancellable,
-		   progress_callback, finish_callback)
+		   GObject.Closure (progress_callback),
+		   GObject.Closure (finish_callback))
     loop:run()
 end
