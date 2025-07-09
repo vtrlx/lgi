@@ -22,7 +22,7 @@ The development package is called `libgirepository-2.0-dev` on Debian-based
 systems (like Ubuntu) and `glib2-devel` on RedHat-based systems
 (like Fedora).
 
-Alternatively, use make-based installation:
+To use make-based installation:
 
     make
     [sudo] make install [PREFIX=<prefix>] [DESTDIR=<destdir>]
