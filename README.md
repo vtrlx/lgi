@@ -8,26 +8,19 @@ Licensed under
 [MIT-style](http://www.opensource.org/licenses/mit-license.php)
 license, see LICENSE file for full text.
 
-Home of the project is on [GitHub](http://github.com/lgi-devs/lgi).
-
-LGI is tested and compatible with standard Lua 5.1, Lua 5.2, Lua 5.3 and
+LGI is tested and compatible with PUC-Rio Lua 5.1, Lua 5.2, Lua 5.3 and
 LuaJIT2.  Compatibility with other Lua implementations is not tested
-yet. Lua 5.4 is only supported experimentally.
+yet. PUC-Rio Lua 5.4 support is still experimental, but beginning to mature.
 
-If you need to support pre-gobject-introspection GTK (ancient GTK+ 2.x
-releases), use [Lua-Gnome](http://sourceforge.net/projects/lua-gnome/).
+This project is forked from [lgi-devs](http://github.com/lgi-devs/lgi).
 
 ## Installation:
 
 In order to be able to compile native part of lgi,
-gobject-introspection >= 0.10.8 development package must be installed,
-although preferred version is >= 1.30.  The development package is
-called `libgirepository1.0-dev` on debian-based systems (like Ubuntu)
-and `gobject-introspection-devel` on RedHat-based systems (like Fedora).
-
-Using LuaRocks:
-
-    luarocks install lgi
+girepository >= 2.80.0 development package must be installed,
+The development package is called `libgirepository-2.0-dev` on Debian-based
+systems (like Ubuntu) and `glib2-devel` on RedHat-based systems
+(like Fedora).
 
 Alternatively, use make-based installation:
 
