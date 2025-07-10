@@ -314,7 +314,7 @@ info_index (lua_State *L)
 	{
 	  if (strcmp (prop, "size") == 0)
 	    {
-	      lua_pushinteger (L, gi_struct_info_get_size (GI_STRUCT_INFO (*info)));
+	      lua_pushinteger (L, gi_union_info_get_size (GI_UNION_INFO (*info)));
 	      return 1;
 	    }
 	  INFOS (union, field)
