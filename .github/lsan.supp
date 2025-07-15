@@ -1,3 +1,6 @@
 # ignore leaks in external libraries
 leak:libglib
 leak:libfontconfig
+leak:libgtk-4
+leak:libffi
+leak:libgallium

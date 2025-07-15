@@ -46,8 +46,7 @@ function progress.file_copy()
 	loop:quit()
     end
 
-    src:copy_async(dst, flags, priority, cancellable,
-		   GObject.Closure (progress_callback),
-		   GObject.Closure (finish_callback))
+    src:copy_async(dst, flags, priority, cancellable, progress_callback,
+                   finish_callback)
     loop:run()
 end
