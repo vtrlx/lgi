@@ -813,6 +813,7 @@ function gireg.enum()
    check(R.test_enum_param(0) == 'value1')
    check(R.test_enum_param(1) == 'value2')
    check(R.test_enum_param(-1) == 'value3')
+   check(R.test_enum_param(nil) == 'value1')
 
    check(R.TestEnumUnsigned.VALUE1 == 1)
    check(R.TestEnumUnsigned.VALUE2 == 0x80000000)
@@ -838,6 +839,7 @@ function gireg.flags()
    checkv(R.TestFlags { 1, 2, 'FLAG1', R.TestFlags.FLAG2 }, 3, 'number')
    checkv(R.TestFlags { 10, FLAG2 = 2 }, 10, 'number')
    checkv(R.TestFlags { 2, 'FLAG2' }, 2, 'number')
+   checkv(R.TestFlags(nil), 0, 'number')
 end
 
 function gireg.flags_out()

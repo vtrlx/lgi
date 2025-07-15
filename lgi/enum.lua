@@ -65,7 +65,11 @@ end
 -- Constructs enum number from specified string. Eventually, for
 -- error-type enums, allows creating error instance.
 function enum.enum_mt:_new(param, ...)
-   if type(param) == 'string' then param = self[param] end
+   if param == nil then
+      return 0
+   elseif type(param) == 'string' then
+      param = self[param]
+   end
    if self.error_domain and select('#', ...) > 0 then
       return core.repo.GLib.Error(self, param, ...)
    else
@@ -94,16 +98,18 @@ end
 
 -- 'Constructs' number from specified flags (or accepts just number).
 function enum.bitflags_mt:_new(param)
-   if type(param) == 'string' then
+   if param == nil then
+      return 0
+   elseif type(param) == 'string' then
       return self[param]
    elseif type(param) == 'number' then
       return param
    else
       local num = 0
       for key, value in pairs(param) do
-	 if type(key) == 'string' then value = key end
-	 if type(value) == 'string' then value = self[value] end
-	 num = bor(num, value)
+         if type(key) == 'string' then value = key end
+         if type(value) == 'string' then value = self[value] end
+         num = bor(num, value)
       end
       return num
    end
