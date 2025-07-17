@@ -25,6 +25,9 @@ if not Gtk.init_check() then
     return "gtk_init_check() failed"
 end
 
+-- If not running Gtk2 or Gtk3, LGI doesn't override.
+if Gtk.get_major_version() > 3 then return end
+
 -- Gtk.Allocation is just an alias to Gdk.Rectangle.
 Gtk.Allocation = Gdk.Rectangle
 

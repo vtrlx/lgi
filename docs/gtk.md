@@ -1,9 +1,16 @@
-# Gtk support
+# Gtk Support
 
-Lgi Gtk support is based on gobject-introspection support.  Some
-extensions are provided to support non-introspectable features and to
-provide easier and more Lua-like access to some important Gtk
-features.
+LGI's Gtk support is based on gobject-introspection. In practice, this means
+that Gtk3, Gtk4, and libadwaita ("Adw") should work out of the box.
+
+Gtk4 and Adw are provided without any additional features specific to LGI. Both
+libraries fully support introspection, and should function as expected according
+to their API documentation.
+
+For Gtk3, LGI provides some extensions in order to support non-introspectable
+features and to provide easier and more Lua-like access to some important Gtk3
+features. The rest of this document describes enhancements LGI provides when
+using Gtk3.
 
 ## Basic Widget and Container support
 
