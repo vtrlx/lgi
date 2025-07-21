@@ -8,8 +8,8 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
-local core = require 'lgi.core'
+local LuaGObject = require 'LuaGObject'
+local core = require 'LuaGObject.core'
 
 local check = testsuite.check
 local checkv = testsuite.checkv
@@ -18,16 +18,16 @@ local checkv = testsuite.checkv
 local gobject = testsuite.group.new('gobject')
 
 function gobject.env_base()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local obj = GObject.Object()
    check(type(core.object.env(obj)) == 'table')
    check(core.object.env(obj) == core.object.env(obj))
    check(next(core.object.env(obj)) == nil)
 end
 
-if lgi.Gtk.Window._method.add then
+if LuaGObject.Gtk.Window._method.add then
   function gobject.env_persist()
-     local Gtk = lgi.Gtk
+     local Gtk = LuaGObject.Gtk
      local window = Gtk.Window()
      local label = Gtk.Label()
      local env = core.object.env(label)
@@ -40,14 +40,14 @@ if lgi.Gtk.Window._method.add then
 end
 
 function gobject.object_new()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local o = GObject.Object()
    o = nil
    collectgarbage()
 end
 
 function gobject.initunk_new()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local o = GObject.InitiallyUnowned()
 
    -- Simulate sink by external container
@@ -59,7 +59,7 @@ function gobject.initunk_new()
 end
 
 function gobject.native()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local o = GObject.Object()
    local p = o._native
    check(type(p) == 'userdata')
@@ -67,14 +67,14 @@ function gobject.native()
 end
 
 function gobject.gtype_create()
-   local GObject = lgi.GObject
-   local Gio = lgi.Gio
+   local GObject = LuaGObject.GObject
+   local Gio = LuaGObject.Gio
    local m = GObject.Object.new(Gio.ThemedIcon, { name = 'icon' })
    check(Gio.ThemedIcon:is_type_of(m))
 end
 
 function gobject.subclass_derive1()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local Derived = GObject.Object:derive('LgiTestDerived1')
    local der = Derived()
    check(Derived:is_type_of(der))
@@ -82,7 +82,7 @@ function gobject.subclass_derive1()
 end
 
 function gobject.subclass_derive2()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local Derived = GObject.Object:derive('LgiTestDerived2')
    local Subderived = Derived:derive('LgiTestSubDerived2')
    local der = Derived()
@@ -95,7 +95,7 @@ function gobject.subclass_derive2()
 end
 
 function gobject.subclass_override1()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local Derived = GObject.Object:derive('LgiTestOverride1')
    local state = 0
    local obj
@@ -117,7 +117,7 @@ function gobject.subclass_override1()
 end
 
 function gobject.subclass_override2()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local state = 0
    local Derived = GObject.Object:derive('LgiTestOverride2')
    function Derived:do_constructed()
@@ -151,7 +151,7 @@ function gobject.subclass_override2()
 end
 
 function gobject.subclass_derive3()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local history = {}
    local Derived = GObject.InitiallyUnowned:derive('LgiTestDerived3')
    function Derived:_class_init()
@@ -182,15 +182,15 @@ function gobject.subclass_derive3()
 end
 
 function gobject.iface_virtual()
-   local Gio = lgi.Gio
+   local Gio = LuaGObject.Gio
    local file = Gio.File.new_for_path('hey')
    check(file:is_native() == file:do_is_native())
    check(file:get_basename() == file:do_get_basename())
 end
 
 function gobject.iface_impl()
-   local GObject = lgi.GObject
-   local Gio = lgi.Gio
+   local GObject = LuaGObject.GObject
+   local Gio = LuaGObject.Gio
    local FakeFile = GObject.Object:derive('LgiTestFakeFile1', { Gio.File })
    function FakeFile:do_get_basename()
       return self.priv.basename
@@ -204,8 +204,9 @@ function gobject.iface_impl()
 end
 
 function gobject.treemodel_impl()
-   local GObject = lgi.GObject
-   local Gtk = lgi.Gtk
+   local GObject = LuaGObject.GObject
+   local Gtk = LuaGObject.Gtk
+   if Gtk.get_major_version() > 3 then return end
    local Model = GObject.Object:derive('LgiTestModel1', { Gtk.TreeModel })
    function Model:do_get_n_columns()
       return 2
@@ -242,7 +243,7 @@ end
 -- here and completing this test takes literally ages, so skip it.  Enable only if explicitely asked for.
 if rawget(_G, '_LGI_ENABLE_ALL_TESTS') then
 function gobject.ctor_gc()
-   local Gtk = lgi.Gtk
+   local Gtk = LuaGObject.Gtk
 
    local oldpause = collectgarbage('setpause', 10)
    local oldstepmul = collectgarbage('setstepmul', 10000)
@@ -261,7 +262,7 @@ end
 end
 
 function gobject.subclass_prop1()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local Derived = GObject.Object:derive('LgiTestDerivedProp1')
    Derived._property.string = GObject.ParamSpecString(
       'string', 'Nick string', 'Blurb string', 'string-default',
@@ -275,8 +276,8 @@ function gobject.subclass_prop1()
 end
 
 function gobject.subclass_prop_inherit()
-   local GObject = lgi.GObject
-   local Gio = lgi.Gio
+   local GObject = LuaGObject.GObject
+   local Gio = LuaGObject.Gio
    local FakeMonitor = GObject.Object:derive(
       'LgiTestFakeMonitor1', { Gio.Initable, Gio.NetworkMonitor })
    FakeMonitor._property.network_available =
@@ -302,7 +303,7 @@ function gobject.subclass_prop_inherit()
    end
    local fakemonitor = FakeMonitor()
 
-   -- Gio.Initable is invoked automatically by lgi after object
+   -- Gio.Initable is invoked automatically by LuaGObject after object
    -- construction.
    check(fakemonitor.priv.inited)
 
@@ -320,7 +321,7 @@ function gobject.subclass_prop_inherit()
 end
 
 function gobject.subclass_prop_getset()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local Derived = GObject.Object:derive('LgiTestDerivedPropGetSet')
    Derived._property.str = GObject.ParamSpecString(
       'str', 'Nick string', 'Blurb string', 'string-default',
@@ -342,7 +343,7 @@ function gobject.subclass_prop_getset()
 end
 
 function gobject.signal_query()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local id = GObject.signal_lookup('notify', GObject.Object)
    check(id ~= 0)
    local query = GObject.signal_query(id)

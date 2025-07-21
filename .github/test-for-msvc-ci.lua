@@ -23,10 +23,10 @@ end
 
 local gtk_version = ("%d.0"):format(gtk_major_version)
 
-local lgi = assert(require("lgi"))
-local Gtk = assert(lgi.require("Gtk", gtk_version))
+local LuaGObject = assert(require("LuaGObject"))
+local Gtk = assert(LuaGObject.require("Gtk", gtk_version))
 
-local app = Gtk.Application({ application_id = "org.lgi-devs.lgi" })
+local app = Gtk.Application({ application_id = "ca.vtrlx.LuaGObject" })
 
 function app:on_activate()
     local w = Gtk.ApplicationWindow()

@@ -1,5 +1,5 @@
-project('lgi', 'c',
-  version: '0.9.2',
+project('LuaGObject', 'c',
+  version: '0.10.0',
   meson_version: '>= 0.50.0',
   default_options: [
     'warning_level=2',
@@ -18,6 +18,7 @@ add_project_arguments(cc.get_supported_arguments(test_c_args), language: 'c')
 
 lua_possible_names = [
   'lua',
+  'lua5.4', 'lua54',
   'lua5.3', 'lua53',
   'lua5.2', 'lua52',
   'lua5.1', 'lua51',
@@ -77,8 +78,8 @@ endif
 gi_dep = dependency('girepository-2.0', version: '>= 2.80')
 gi_datadir = gi_dep.get_pkgconfig_variable('gidatadir')
 
-install_data('lgi.lua', install_dir: lua_path)
-subdir('lgi')
+install_data('LuaGObject.lua', install_dir: lua_path)
+subdir('LuaGObject')
 if get_option('tests')
   subdir('tests')
 endif

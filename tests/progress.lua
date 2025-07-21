@@ -8,10 +8,10 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
-local Gio = lgi.Gio
-local GLib = lgi.GLib
-local GObject = lgi.GObject
+local LuaGObject = require 'LuaGObject'
+local Gio = LuaGObject.Gio
+local GLib = LuaGObject.GLib
+local GObject = LuaGObject.GObject
 
 local check = testsuite.check
 

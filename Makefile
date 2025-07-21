@@ -1,19 +1,20 @@
 #
-# LGI Dynamic GObject introspection binding.
+# LuaGObject: Dynamic binding to GObject-based libraries using
+# GObject-Introspection.
 #
 # Author: Pavel Holejsovsky <pavel.holejsovsky@gmail.com>
 # License: MIT
 #
 
-VERSION = 0.9.2
+VERSION = 0.10.0
 MAKE ?= make
 
-ROCK = lgi-$(VERSION)-1.rockspec
+ROCK = LuaGObject-$(VERSION)-1.rockspec
 
 .PHONY : rock all clean install check
 
 all :
-	$(MAKE) -C lgi
+	$(MAKE) -C LuaGObject
 
 rock : $(ROCK)
 $(ROCK) : rockspec.in Makefile
@@ -21,11 +22,11 @@ $(ROCK) : rockspec.in Makefile
 
 clean :
 	rm -f *.rockspec
-	$(MAKE) -C lgi clean
+	$(MAKE) -C LuaGObject clean
 	$(MAKE) -C tests clean
 
 install :
-	$(MAKE) -C lgi install
+	$(MAKE) -C LuaGObject install
 
 check : all
 	$(MAKE) -C tests check

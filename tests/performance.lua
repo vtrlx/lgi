@@ -8,10 +8,10 @@
 --
 ------------------------------------------------------------------------------
 
-local lgi = require("lgi")
-local cairo = lgi.cairo
-local Gtk = lgi.Gtk
-local GLib = lgi.GLib
+local LuaGObject = require("LuaGObject")
+local cairo = LuaGObject.cairo
+local Gtk = LuaGObject.Gtk
+local GLib = LuaGObject.GLib
 
 local width, height = 200, 200
 local surf = cairo.ImageSurface('ARGB32', width, height)

@@ -1,4 +1,4 @@
-package = 'lgi'
+package = 'LuaGObject'
 version = '%VERSION%-1'
 
 description = {
@@ -9,13 +9,13 @@ description = {
 	 directly from Lua.
    ]],
    license = 'MIT/X11',
-   homepage = 'https://github.com/lgi-devs/lgi'
+   homepage = 'https://github.com/vtrlx/LuaGObject'
 }
 
 supported_platforms = { 'unix', 'mingw' }
 
 source = {
-   url = 'git://github.com/lgi-devs/lgi.git',
+   url = 'git://github.com/vtrlx/LuaGObject.git',
    tag = '%VERSION%'
 }
 

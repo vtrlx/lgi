@@ -8,7 +8,7 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
+local LuaGObject = require 'LuaGObject'
 
 local check = testsuite.check
 
@@ -16,7 +16,7 @@ local check = testsuite.check
 local glib = testsuite.group.new('glib')
 
 function glib.timer()
-   local Timer = lgi.GLib.Timer
+   local Timer = LuaGObject.GLib.Timer
    check(Timer.new)
    check(Timer.start)
    check(Timer.stop)
@@ -34,7 +34,7 @@ function glib.timer()
    check(type(el1) == 'number')
    check(type(ms1) == 'number')
 
-   lgi.GLib.usleep(1000) -- wait one millisecond
+   LuaGObject.GLib.usleep(1000) -- wait one millisecond
 
    local el2, ms2 = timer:elapsed()
    check(el1 < el2)
@@ -46,8 +46,8 @@ function glib.timer()
 end
 
 function glib.markup_base()
-   local MarkupParser = lgi.GLib.MarkupParser
-   local MarkupParseContext = lgi.GLib.MarkupParseContext
+   local MarkupParser = LuaGObject.GLib.MarkupParser
+   local MarkupParseContext = LuaGObject.GLib.MarkupParseContext
 
    local p = MarkupParser()
    local el, at = {}, {}
@@ -79,8 +79,8 @@ function glib.markup_base()
 end
 
 function glib.markup_error1()
-   local MarkupParser = lgi.GLib.MarkupParser
-   local MarkupParseContext = lgi.GLib.MarkupParseContext
+   local MarkupParser = LuaGObject.GLib.MarkupParser
+   local MarkupParseContext = LuaGObject.GLib.MarkupParseContext
 
    local saved_err
    local parser = MarkupParser {
@@ -95,7 +95,7 @@ function glib.markup_error1()
 end
 
 function glib.markup_error2()
-   local GLib = lgi.GLib
+   local GLib = LuaGObject.GLib
    local MarkupParser = GLib.MarkupParser
    local MarkupParseContext = GLib.MarkupParseContext
 
@@ -117,7 +117,7 @@ function glib.markup_error2()
 end
 
 function glib.gsourcefuncs()
-   local GLib = lgi.GLib
+   local GLib = LuaGObject.GLib
 
    local called
    local source_funcs = GLib.SourceFuncs {
@@ -139,7 +139,7 @@ function glib.coroutine_related_crash()
     -- is a regression test: Once upon a time this caused a segmentation fault
     -- due to a use-after-free.
 
-    local glib = require("lgi").GLib
+    local glib = require("LuaGObject").GLib
     local mainloop = glib.MainLoop.new()
     coroutine.wrap(function()
 	local co = coroutine.running()

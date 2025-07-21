@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 
-  lgi testsuite, Pango test suite.
+  LuaGObject testsuite, Pango test suite.
 
   Copyright (c) 2013 Pavel Holejsovsky
   Licensed under the MIT license:
@@ -8,23 +8,23 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
-local core = require 'lgi.core'
+local LuaGObject = require 'LuaGObject'
+local core = require 'LuaGObject.core'
 
 local check = testsuite.check
 
 -- Pango overrides testing
 local pango = testsuite.group.new('pango')
 
--- Test originating from https://github.com/pavouk/lgi/issues/68
+-- Test originating from https://github.com/pavouk/LuaGObject/issues/68
 function pango.glyphstring()
-   local Pango = lgi.Pango
+   local Pango = LuaGObject.Pango
    local pal = Pango.AttrList.new();
    pal:insert(Pango.Attribute.language_new(Pango.Language.from_string("he")))
    pal:insert(Pango.Attribute.family_new("Adobe Hebrew"))
    pal:insert(Pango.Attribute.size_new(12))
 
-   local fm = lgi.PangoCairo.FontMap.get_default()
+   local fm = LuaGObject.PangoCairo.FontMap.get_default()
    local pango_context = Pango.FontMap.create_context(fm)
    pango_context:set_language(Pango.Language.from_string("he"))
    local s = "ltr שָׁוְא ltr"

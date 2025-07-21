@@ -8,7 +8,7 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
+local LuaGObject = require 'LuaGObject'
 
 local check = testsuite.check
 
@@ -16,7 +16,7 @@ local check = testsuite.check
 local marshal = testsuite.group.new('marshal')
 
 function marshal.callback_hidedata()
-   local GLib = lgi.GLib
+   local GLib = LuaGObject.GLib
    local main_loop = GLib.MainLoop()
    local argc
    GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100,

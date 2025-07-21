@@ -1,6 +1,6 @@
 --[[--------------------------------------------------------------------------
 
-  lgi testsuite, Gio DBus test suite.
+  LuaGObject testsuite, Gio DBus test suite.
 
   Copyright (c) 2013 Pavel Holejsovsky
   Licensed under the MIT license:
@@ -8,7 +8,7 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
+local LuaGObject = require 'LuaGObject'
 
 local check = testsuite.check
 
@@ -16,7 +16,7 @@ local check = testsuite.check
 local dbus = testsuite.group.new('dbus')
 
 function dbus.info_basic()
-   local Gio = lgi.Gio
+   local Gio = LuaGObject.Gio
    local node = Gio.DBusNodeInfo {
       path = '/some/path',
       interfaces = {
@@ -66,8 +66,8 @@ function dbus.info_basic()
 end
 
 function dbus.info_xml()
-   local GLib = lgi.GLib
-   local Gio = lgi.Gio
+   local GLib = LuaGObject.GLib
+   local Gio = LuaGObject.Gio
    local node = Gio.DBusNodeInfo {
       path = '/some/path',
       interfaces = {
@@ -124,7 +124,7 @@ function dbus.info_xml()
 end
 
 function dbus.proxy_get_interface_info()
-   local Gio = lgi.Gio
+   local Gio = LuaGObject.Gio
 
    local interface = Gio.DBusInterfaceInfo {
       name = 'SomeInterface'

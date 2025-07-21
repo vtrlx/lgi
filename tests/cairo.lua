@@ -10,14 +10,14 @@
 
 local io = require 'io'
 local os = require 'os'
-local lgi = require 'lgi'
+local LuaGObject = require 'LuaGObject'
 
 local check = testsuite.check
 local checkv = testsuite.checkv
 local cairo = testsuite.group.new('cairo')
 
 function cairo.status()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
 
    for name, value in pairs(cairo.Status) do
       if type(name) == 'string' and type(value) == 'number' then
@@ -49,7 +49,7 @@ local function check_matrix(matrix, xx, yx, xy, yy, x0, y0)
 end
 
 function cairo.matrix()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
 
    local matrix = cairo.Matrix()
    check_matrix(matrix, 0, 0, 0, 0, 0, 0)
@@ -61,7 +61,7 @@ function cairo.matrix()
 end
 
 function cairo.matrix_getset()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local surface = cairo.ImageSurface('ARGB32', 100, 100)
    local cr = cairo.Context(surface)
 
@@ -79,7 +79,7 @@ function cairo.matrix_getset()
 end
 
 function cairo.matrix_init()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
 
    local m = cairo.Matrix.create_identity()
    check_matrix(m, 1, 0, 0, 1, 0, 0)
@@ -97,7 +97,7 @@ function cairo.matrix_init()
 end
 
 function cairo.matrix_operations()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local m = cairo.Matrix.create_identity()
 
    m:translate(2, 3)
@@ -129,7 +129,7 @@ function cairo.matrix_operations()
 end
 
 function cairo.dash()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local surface = cairo.ImageSurface('ARGB32', 100, 100)
    local cr = cairo.Context(surface)
 
@@ -152,7 +152,7 @@ function cairo.dash()
 end
 
 function cairo.path()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local surface = cairo.ImageSurface('ARGB32', 100, 100)
    local cr = cairo.Context(surface)
 
@@ -199,7 +199,7 @@ function cairo.path()
 end
 
 function cairo.surface_type()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local surface = cairo.ImageSurface('ARGB32', 100, 100)
    local cr = cairo.Context(surface)
 
@@ -219,7 +219,7 @@ function cairo.surface_type()
 end
 
 function cairo.pattern_type()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local pattern
 
    pattern = cairo.Pattern.create_rgb(1, 1, 1)
@@ -263,7 +263,7 @@ function cairo.pattern_type()
 end
 
 function cairo.pattern_mesh()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
 
    -- Mesh patterns are introduced in cairo 1.12
    if cairo.version < cairo.version_encode(1, 12, 0) then
@@ -357,7 +357,7 @@ function cairo.pattern_mesh()
 end
 
 function cairo.context_getset()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local surface = cairo.ImageSurface('ARGB32', 100, 100)
    local cr = cairo.Context(surface)
 
@@ -420,7 +420,7 @@ function cairo.context_getset()
 end
 
 function cairo.context_transform()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    local surface = cairo.ImageSurface('ARGB32', 100, 100)
    local cr = cairo.Context(surface)
 
@@ -449,7 +449,7 @@ function cairo.context_transform()
 end
 
 function cairo.device_scale()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    if cairo.version >= cairo.version_encode(1, 14, 0) then
       local surface = cairo.ImageSurface('ARGB32', 100, 100)
 
@@ -467,7 +467,7 @@ function cairo.device_scale()
 end
 
 function cairo.create_similar_image()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
    if cairo.version >= cairo.version_encode(1, 12, 0) then
       local surface = cairo.ImageSurface('ARGB32', 100, 100)
       local similar = surface:create_similar_image('RGB24', 1, 2)
@@ -479,7 +479,7 @@ function cairo.create_similar_image()
 end
 
 function cairo.pattern_reference()
-   local cairo = lgi.cairo
+   local cairo = LuaGObject.cairo
 
    local img = cairo.ImageSurface(cairo.Format.RGB24, 42, 42)
    local img2 = cairo.ImageSurface(cairo.Format.RGB24, 42, 42)

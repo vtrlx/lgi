@@ -9,7 +9,7 @@
 --]]--------------------------------------------------------------------------
 
 local coroutine = require 'coroutine'
-local lgi = require 'lgi'
+local LuaGObject = require 'LuaGObject'
 
 local check, checkv = testsuite.check, testsuite.checkv
 
@@ -17,7 +17,7 @@ local check, checkv = testsuite.check, testsuite.checkv
 local corocbk = testsuite.group.new('corocbk')
 
 function corocbk.resume_suspd()
-   local GLib = lgi.GLib
+   local GLib = LuaGObject.GLib
    local main_loop = GLib.MainLoop()
    local coro = coroutine.create(
       function()
@@ -31,7 +31,7 @@ function corocbk.resume_suspd()
 end
 
 function corocbk.resume_init()
-   local GLib = lgi.GLib
+   local GLib = LuaGObject.GLib
    local main_loop = GLib.MainLoop()
    local coro = coroutine.create(
       function()
@@ -43,7 +43,7 @@ function corocbk.resume_init()
 end
 
 function corocbk.rethrow()
-   local GLib = lgi.GLib
+   local GLib = LuaGObject.GLib
    local main_loop = GLib.MainLoop()
    local coro = coroutine.create(
       function()

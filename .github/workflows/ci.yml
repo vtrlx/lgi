@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install build dependencies
         run: source .github/install_deps.bash
-      - name: Build lgi and the test suite
+      - name: Build LuaGObject and the test suite
         run: |
           make CC='gcc -g -fsanitize=address -fsanitize=undefined -ftest-coverage -fprofile-arcs'
           make -C tests CC='gcc -g -fsanitize=address -fsanitize=undefined -ftest-coverage -fprofile-arcs' LUA_LIB='-llua -ldl -lm'
@@ -50,14 +50,14 @@ jobs:
           LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan.supp
           UBSAN_OPTIONS: print_stacktrace=1:report_error_type=1:halt_on_error=1:suppressions=${{ github.workspace }}/.github/ubsan.supp
         run: |
-          source .github/find_asan_ubsan.bash "lgi/corelgilua51.so"
+          source .github/find_asan_ubsan.bash "LuaGObject/lua_gobject_core.so"
           xvfb-run -a sh -c 'LD_PRELOAD="${sanitizers}" make check'
       - name: Check that make install works
         env:
           LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan.supp
           UBSAN_OPTIONS: print_stacktrace=1:report_error_type=1:halt_on_error=1:suppressions=${{ github.workspace }}/.github/ubsan.supp
         run: |
-          source .github/find_asan_ubsan.bash "lgi/corelgilua51.so"
+          source .github/find_asan_ubsan.bash "LuaGObject/lua_gobject_core.so"
           source .github/test_make_install.bash
       - name: Upload coverage report to codecov.io
         uses: codecov/codecov-action@v1
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install build dependencies
         run: source .github/install_deps.bash
-      - name: Build lgi and the test suite
+      - name: Build LuaGObject and the test suite
         run: |
           make CC='gcc -g -fsanitize=address -fsanitize=undefined -ftest-coverage -fprofile-arcs'
           make -C tests CC='gcc -g -fsanitize=address -fsanitize=undefined -ftest-coverage -fprofile-arcs' LUA_LIB='-llua -ldl -lm'
@@ -98,14 +98,14 @@ jobs:
           LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan.supp
           UBSAN_OPTIONS: print_stacktrace=1:report_error_type=1:halt_on_error=1:suppressions=${{ github.workspace }}/.github/ubsan.supp
         run: |
-          source .github/find_asan_ubsan.bash "lgi/corelgilua51.so"
+          source .github/find_asan_ubsan.bash "LuaGObject/lua_gobject_core.so"
           xvfb-run -a sh -c 'LD_PRELOAD="${sanitizers}" make check'
       - name: Check that make install works
         env:
           LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan.supp
           UBSAN_OPTIONS: print_stacktrace=1:report_error_type=1:halt_on_error=1:suppressions=${{ github.workspace }}/.github/ubsan.supp
         run: |
-          source .github/find_asan_ubsan.bash "lgi/corelgilua51.so"
+          source .github/find_asan_ubsan.bash "LuaGObject/lua_gobject_core.so"
           source .github/test_make_install.bash
       - name: Upload coverage report to codecov.io
         uses: codecov/codecov-action@v1

@@ -8,9 +8,9 @@
 
 --]]--------------------------------------------------------------------------
 
-local lgi = require 'lgi'
-local GLib = lgi.GLib
-local GObject = lgi.GObject
+local LuaGObject = require 'LuaGObject'
+local GLib = LuaGObject.GLib
+local GObject = LuaGObject.GObject
 
 local check = testsuite.check
 

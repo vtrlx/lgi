@@ -1,5 +1,5 @@
 /*
- * LGI regression test.
+ * LuaGObject regression test.
  * Copyright (c) 2019 Uli Schlachter
  *
  * Licensed under the MIT license:
@@ -24,9 +24,9 @@ static void run_string (lua_State *L, const char *str)
 }
 
 const char add_async[] =
-"local lgi = require('lgi');"
-"local GLib = lgi.GLib;"
-"local Gio = lgi.Gio;"
+"local LuaGObject = require('LuaGObject');"
+"local GLib = LuaGObject.GLib;"
+"local Gio = LuaGObject.Gio;"
 "local bytes = GLib.Bytes.new('Test', 4);"
 "local stream = Gio.MemoryInputStream.new_from_bytes(bytes);"
 "Gio.Async.start(function(stream)"
@@ -51,7 +51,7 @@ int main()
   run_string (L2, add_async);
 
   /* Do a main loop iteration */
-  run_string (L3, "require('lgi').GLib.MainContext.default():iteration(true)");
+  run_string (L3, "require('LuaGObject').GLib.MainContext.default():iteration(true)");
 
   /* Check that both coroutines are done */
   lua_getglobal(L1, "done");

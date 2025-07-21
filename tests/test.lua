@@ -127,7 +127,7 @@ end
 if tests_debug or package.loaded.debugger then
    -- Make logs verbose (do not mute DEBUG level).
    testsuite.verbose = true
-   require('lgi').log.DEBUG = 'verbose'
+   require('LuaGObject').log.DEBUG = 'verbose'
    for _, name in ipairs(groups) do
       groups[name].debug = true
       _G[name] = groups[name]

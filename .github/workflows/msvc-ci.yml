@@ -103,16 +103,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure lgi through meson
-        run: meson setup lgi-build . --prefix "${{ env.GTK_DIR }}" "-Dlua-pc=${{ env.LUA_PC }}" -Dtests=false
+      - name: Configure LuaGObject through meson
+        run: meson setup LuaGObject-build . --prefix "${{ env.GTK_DIR }}" "-Dlua-pc=${{ env.LUA_PC }}" -Dtests=false
       
-      - name: Build lgi
-        run: meson compile -C lgi-build
+      - name: Build LuaGObject
+        run: meson compile -C LuaGObject-build
       
-      - name: Install lgi
-        run: meson install -C lgi-build
+      - name: Install LuaGObject
+        run: meson install -C LuaGObject-build
 
-      - name: Test lgi
+      - name: Test LuaGObject
         run: lua ".github\\test-for-msvc-ci.lua" ${{ matrix.gtk-major-version }};
   
   build-msvc-luajit:
@@ -333,14 +333,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure lgi through meson
-        run: meson setup lgi-build . --prefix "${{ env.GTK_DIR }}" "-Dlua-bin=luajit" -Dtests=false
+      - name: Configure LuaGObject through meson
+        run: meson setup LuaGObject-build . --prefix "${{ env.GTK_DIR }}" "-Dlua-bin=luajit" -Dtests=false
       
-      - name: Build lgi
-        run: meson compile -C lgi-build
+      - name: Build LuaGObject
+        run: meson compile -C LuaGObject-build
       
-      - name: Install lgi
-        run: meson install -C lgi-build
+      - name: Install LuaGObject
+        run: meson install -C LuaGObject-build
 
-      - name: Test lgi
+      - name: Test LuaGObject
         run: luajit ".github\\test-for-msvc-ci.lua" ${{ matrix.gtk-major-version }};

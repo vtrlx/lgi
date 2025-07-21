@@ -1,5 +1,5 @@
 #
-# Makefile for compiling lgi testsuite support
+# Makefile for compiling LuaGObject testsuite support
 #
 # Author: Pavel Holejsovsky <pavel.holejsovsky@gmail.com>
 # License: MIT

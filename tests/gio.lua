@@ -10,8 +10,8 @@
 
 local type = type
 
-local lgi = require 'lgi'
-local core = require 'lgi.core'
+local LuaGObject = require 'LuaGObject'
+local core = require 'LuaGObject.core'
 
 local check = testsuite.check
 local checkv = testsuite.checkv
@@ -19,7 +19,7 @@ local checkv = testsuite.checkv
 local gio = testsuite.group.new('gio')
 
 function gio.read()
-    local GLib, Gio = lgi.GLib, lgi.Gio
+    local GLib, Gio = LuaGObject.GLib, LuaGObject.Gio
 
     -- Prepare the input to read
     local input
@@ -41,7 +41,7 @@ function gio.read()
 end
 
 function gio.async_access()
-   local Gio = lgi.Gio
+   local Gio = LuaGObject.Gio
    local res
 
    res = Gio.DBusProxy.async_new

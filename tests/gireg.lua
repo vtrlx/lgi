@@ -11,7 +11,7 @@
 -- Note: changed during Lua 5.3 integer support conversion.
 -- Now 64bit integers work, but floats without representation are no longer auto-converted.
 
-local lgi = require 'lgi'
+local LuaGObject = require 'LuaGObject'
 local bytes = require 'bytes'
 
 local fail = testsuite.fail
@@ -23,7 +23,7 @@ local gireg = testsuite.group.new('gireg')
 local nativeIntegers = math.maxinteger and true or false
 
 function gireg.type_boolean()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_boolean(true), true, 'boolean')
    checkv(R.test_boolean(false), false, 'boolean')
    check(select('#', R.test_boolean(true)) == 1)
@@ -38,7 +38,7 @@ function gireg.type_boolean()
 end
 
 function gireg.type_int8()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_int8(0), 0, 'number')
    checkv(R.test_int8(1), 1, 'number')
    checkv(R.test_int8(-1), -1, 'number')
@@ -59,7 +59,7 @@ function gireg.type_int8()
 end
 
 function gireg.type_uint8()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_uint8(0), 0, 'number')
    checkv(R.test_uint8(1), 1, 'number')
    if not nativeIntegers then
@@ -77,7 +77,7 @@ function gireg.type_uint8()
 end
 
 function gireg.type_int16()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_int16(0), 0, 'number')
    checkv(R.test_int16(1), 1, 'number')
    checkv(R.test_int16(-1), -1, 'number')
@@ -98,7 +98,7 @@ function gireg.type_int16()
 end
 
 function gireg.type_uint16()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_uint16(0), 0, 'number')
    checkv(R.test_uint16(1), 1, 'number')
    if not nativeIntegers then
@@ -116,7 +116,7 @@ function gireg.type_uint16()
 end
 
 function gireg.type_int32()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_int32(0), 0, 'number')
    checkv(R.test_int32(1), 1, 'number')
    checkv(R.test_int32(-1), -1, 'number')
@@ -137,7 +137,7 @@ function gireg.type_int32()
 end
 
 function gireg.type_uint32()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_uint32(0), 0, 'number')
    checkv(R.test_uint32(1), 1, 'number')
    if not nativeIntegers then
@@ -155,7 +155,7 @@ function gireg.type_uint32()
 end
 
 function gireg.type_int64()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_int64(0), 0, 'number')
    checkv(R.test_int64(1), 1, 'number')
    checkv(R.test_int64(-1), -1, 'number')
@@ -190,7 +190,7 @@ function gireg.type_int64()
 end
 
 function gireg.type_uint64()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_uint64(0), 0, 'number')
    checkv(R.test_uint64(1), 1, 'number')
    if not nativeIntegers then
@@ -214,7 +214,7 @@ function gireg.type_uint64()
 end
 
 function gireg.type_short()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_short(0), 0, 'number')
    checkv(R.test_short(1), 1, 'number')
    checkv(R.test_short(-1), -1, 'number')
@@ -225,7 +225,7 @@ function gireg.type_short()
 end
 
 function gireg.type_ushort()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_ushort(0), 0, 'number')
    checkv(R.test_ushort(1), 1, 'number')
    if not nativeIntegers then
@@ -235,7 +235,7 @@ function gireg.type_ushort()
 end
 
 function gireg.type_int()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_int(0), 0, 'number')
    checkv(R.test_int(1), 1, 'number')
    checkv(R.test_int(-1), -1, 'number')
@@ -246,7 +246,7 @@ function gireg.type_int()
 end
 
 function gireg.type_uint()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_uint(0), 0, 'number')
    checkv(R.test_uint(1), 1, 'number')
    if not nativeIntegers then
@@ -256,7 +256,7 @@ function gireg.type_uint()
 end
 
 function gireg.type_ssize()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_ssize(0), 0, 'number')
    checkv(R.test_ssize(1), 1, 'number')
    checkv(R.test_ssize(-1), -1, 'number')
@@ -267,7 +267,7 @@ function gireg.type_ssize()
 end
 
 function gireg.type_size()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_size(0), 0, 'number')
    checkv(R.test_size(1), 1, 'number')
    if not nativeIntegers then
@@ -287,7 +287,7 @@ local function checkvf(val, exp, tolerance)
 end
 
 function gireg.type_float()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local t = 0.0000001
    checkvf(R.test_float(0), 0, t)
    checkvf(R.test_float(1), 1, t)
@@ -307,7 +307,7 @@ function gireg.type_float()
 end
 
 function gireg.type_double()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_double(0), 0, 'number')
    checkv(R.test_double(1), 1, 'number')
    checkv(R.test_double(1.1), 1.1, 'number')
@@ -326,7 +326,7 @@ function gireg.type_double()
 end
 
 function gireg.type_timet()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_timet(0), 0, 'number')
    checkv(R.test_timet(1), 1, 'number')
    checkv(R.test_timet(10000), 10000, 'number')
@@ -339,7 +339,7 @@ function gireg.type_timet()
 end
 
 function gireg.type_gtype()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.test_gtype(), nil, 'nil')
    checkv(R.test_gtype(nil), nil, 'nil')
    checkv(R.test_gtype(0), nil, 'nil')
@@ -353,39 +353,39 @@ function gireg.type_gtype()
 end
 
 function gireg.utf8_const_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local utf8_const = 'const \226\153\165 utf8'
    check(R.test_utf8_const_return() == utf8_const)
 end
 
 function gireg.utf8_nonconst_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local utf8_nonconst = 'nonconst \226\153\165 utf8'
    check(R.test_utf8_nonconst_return() == utf8_nonconst)
 end
 
 function gireg.utf8_const_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local utf8_const = 'const \226\153\165 utf8'
    R.test_utf8_const_in(utf8_const)
    R.test_utf8_const_in(bytes.new(utf8_const .. '\0'))
 end
 
 function gireg.utf8_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local utf8_nonconst = 'nonconst \226\153\165 utf8'
    check(R.test_utf8_out() == utf8_nonconst)
 end
 
 function gireg.utf8_inout()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local utf8_const = 'const \226\153\165 utf8'
    local utf8_nonconst = 'nonconst \226\153\165 utf8'
    check(R.test_utf8_inout(utf8_const) == utf8_nonconst)
 end
 
 function gireg.filename_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local fns = R.test_filename_return()
    check(type(fns) == 'table')
    check(#fns == 2)
@@ -394,7 +394,7 @@ function gireg.filename_return()
 end
 
 function gireg.utf8_int_out_utf8()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_int_out_utf8('') == 0)
    check(R.test_int_out_utf8('abc') == 3)
    local utf8_const = 'const \226\153\165 utf8'
@@ -402,39 +402,39 @@ function gireg.utf8_int_out_utf8()
 end
 
 function gireg.multi_double_args()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o1, o2 = R.test_multi_double_args(1)
    check(o1 == 2 and o2 == 3)
    check(#{R.test_multi_double_args(1)} == 2)
 end
 
 function gireg.utf8_out_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o1, o2 = R.test_utf8_out_out()
    check(o1 == 'first' and o2 == 'second')
    check(#{R.test_utf8_out_out()} == 2)
 end
 
 function gireg.utf8_out_nonconst_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o1, o2 = R.test_utf8_out_nonconst_return()
    check(o1 == 'first' and o2 == 'second')
    check(#{R.test_utf8_out_nonconst_return()} == 2)
 end
 
 function gireg.utf8_null_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_utf8_null_in(nil)
    R.test_utf8_null_in()
 end
 
 function gireg.utf8_null_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_utf8_null_out() == nil)
 end
 
 function gireg.array_int_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_array_int_in{1,2,3} == 6)
    if not nativeIntegers then
       check(R.test_array_int_in{1.1,2,3} == 6)
@@ -446,7 +446,7 @@ function gireg.array_int_in()
 end
 
 function gireg.array_int_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_int_out()
    check(#a == 5)
    check(a[1] == 0 and a[2] == 1 and a[3] == 2 and a[4] == 3 and a[5] == 4)
@@ -454,7 +454,7 @@ function gireg.array_int_out()
 end
 
 function gireg.array_int_inout()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_int_inout({1, 2, 3, 4, 5})
    check(#a == 4)
    check(a[1] == 3 and a[2] == 4 and a[3] == 5 and a[4] == 6)
@@ -465,7 +465,7 @@ function gireg.array_int_inout()
 end
 
 function gireg.array_gint8_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_array_gint8_in{1,2,3} == 6)
    if not nativeIntegers then
       check(R.test_array_gint8_in{1.1,2,3} == 6)
@@ -478,7 +478,7 @@ function gireg.array_gint8_in()
 end
 
 function gireg.array_gint16_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_array_gint16_in{1,2,3} == 6)
    if not nativeIntegers then
       check(R.test_array_gint16_in{1.1,2,3} == 6)
@@ -490,7 +490,7 @@ function gireg.array_gint16_in()
 end
 
 function gireg.array_gint32_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_array_gint32_in{1,2,3} == 6)
    if not nativeIntegers then
       check(R.test_array_gint32_in{1.1,2,3} == 6)
@@ -502,7 +502,7 @@ function gireg.array_gint32_in()
 end
 
 function gireg.array_gint64_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_array_gint64_in{1,2,3} == 6)
    if not nativeIntegers then
       check(R.test_array_gint64_in{1.1,2,3} == 6)
@@ -514,7 +514,7 @@ function gireg.array_gint64_in()
 end
 
 function gireg.array_strv_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_strv_in{'1', '2', '3'})
    check(not pcall(R.test_strv_in))
    check(not pcall(R.test_strv_in, '1'))
@@ -524,11 +524,11 @@ function gireg.array_strv_in()
 end
 
 function gireg.array_gtype_in()
-   local R = lgi.Regress
-   local GObject = lgi.GObject
+   local R = LuaGObject.Regress
+   local GObject = LuaGObject.GObject
    local str = R.test_array_gtype_in {
-      lgi.GObject.Value._gtype,
-      lgi.GObject.type_from_name('gchar')
+      LuaGObject.GObject.Value._gtype,
+      LuaGObject.GObject.type_from_name('gchar')
    }
    check(str == '[GValue,gchar,]')
    check(R.test_array_gtype_in({}) == '[]')
@@ -539,7 +539,7 @@ function gireg.array_gtype_in()
 end
 
 function gireg.array_strv_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_strv_out()
    check(type(a) == 'table' and #a == 5)
    check(table.concat(a, ' ') == 'thanks for all the fish')
@@ -547,14 +547,14 @@ function gireg.array_strv_out()
 end
 
 function gireg.array_strv_out_container()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_strv_out_container()
    check(type(a) == 'table' and #a == 3)
    check(table.concat(a, ' ') == '1 2 3')
 end
 
 function gireg.array_strv_outarg()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_strv_outarg()
    check(type(a) == 'table' and #a == 3)
    check(table.concat(a, ' ') == '1 2 3')
@@ -562,7 +562,7 @@ function gireg.array_strv_outarg()
 end
 
 function gireg.array_fixed_size_int_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_fixed_size_int_out()
    check(type(a) == 'table' and #a == 5)
    check(a[1] == 0 and a[2] == 1 and a[3] == 2 and a[4] == 3 and a[5] == 4)
@@ -570,7 +570,7 @@ function gireg.array_fixed_size_int_out()
 end
 
 function gireg.array_fixed_size_int_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_fixed_size_int_return()
    check(type(a) == 'table' and #a == 5)
    check(a[1] == 0 and a[2] == 1 and a[3] == 2 and a[4] == 3 and a[5] == 4)
@@ -578,14 +578,14 @@ function gireg.array_fixed_size_int_return()
 end
 
 function gireg.array_strv_out_c()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_strv_out_c()
    check(type(a) == 'table' and #a == 5)
    check(table.concat(a, ' ') == 'thanks for all the fish')
 end
 
 function gireg.array_int_full_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_int_full_out()
    check(type(a) == 'table' and #a == 5)
    check(a[1] == 0 and a[2] == 1 and a[3] == 2 and a[4] == 3 and a[5] == 4)
@@ -593,7 +593,7 @@ function gireg.array_int_full_out()
 end
 
 function gireg.array_int_full_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_int_full_out()
    check(type(a) == 'table' and #a == 5)
    check(a[1] == 0 and a[2] == 1 and a[3] == 2 and a[4] == 3 and a[5] == 4)
@@ -601,19 +601,19 @@ function gireg.array_int_full_out()
 end
 
 function gireg.array_int_null_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_array_int_null_in()
    R.test_array_int_null_in(nil)
 end
 
 function gireg.array_int_null_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.test_array_int_null_out()
    check(type(a) == 'table' and not next(a))
 end
 
 function gireg.glist_nothing_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_glist_nothing_return()) == 1)
    a = R.test_glist_nothing_return()
    check(type(a) == 'table' and #a == 3)
@@ -621,7 +621,7 @@ function gireg.glist_nothing_return()
 end
 
 function gireg.glist_nothing_return2()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_glist_nothing_return2()) == 1)
    a = R.test_glist_nothing_return2()
    check(type(a) == 'table' and #a == 3)
@@ -629,7 +629,7 @@ function gireg.glist_nothing_return2()
 end
 
 function gireg.glist_container_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_glist_container_return()) == 1)
    a = R.test_glist_container_return()
    check(type(a) == 'table' and #a == 3)
@@ -637,7 +637,7 @@ function gireg.glist_container_return()
 end
 
 function gireg.glist_everything_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_glist_everything_return()) == 1)
    a = R.test_glist_everything_return()
    check(type(a) == 'table' and #a == 3)
@@ -645,31 +645,31 @@ function gireg.glist_everything_return()
 end
 
 function gireg.glist_nothing_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_glist_nothing_in  {'1', '2', '3'}
 end
 
 function gireg.glist_nothing_in2()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_glist_nothing_in2  {'1', '2', '3'}
 end
 
 function gireg.glist_null_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_glist_null_in {}
    R.test_glist_null_in(nil)
    R.test_glist_null_in()
 end
 
 function gireg.glist_null_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_glist_null_out()) == 1)
    local a = R.test_glist_null_out()
    check(type(a) == 'table' and #a == 0)
 end
 
 function gireg.gslist_nothing_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_gslist_nothing_return()) == 1)
    a = R.test_gslist_nothing_return()
    check(type(a) == 'table' and #a == 3)
@@ -677,7 +677,7 @@ function gireg.gslist_nothing_return()
 end
 
 function gireg.gslist_nothing_return2()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_gslist_nothing_return2()) == 1)
    a = R.test_gslist_nothing_return2()
    check(type(a) == 'table' and #a == 3)
@@ -685,7 +685,7 @@ function gireg.gslist_nothing_return2()
 end
 
 function gireg.gslist_container_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_gslist_container_return()) == 1)
    a = R.test_gslist_container_return()
    check(type(a) == 'table' and #a == 3)
@@ -693,7 +693,7 @@ function gireg.gslist_container_return()
 end
 
 function gireg.gslist_everything_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_gslist_everything_return()) == 1)
    a = R.test_gslist_everything_return()
    check(type(a) == 'table' and #a == 3)
@@ -701,31 +701,31 @@ function gireg.gslist_everything_return()
 end
 
 function gireg.gslist_nothing_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_gslist_nothing_in  {'1', '2', '3'}
 end
 
 function gireg.gslist_nothing_in2()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_gslist_nothing_in2  {'1', '2', '3'}
 end
 
 function gireg.gslist_null_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_gslist_null_in {}
    R.test_gslist_null_in(nil)
    R.test_gslist_null_in()
 end
 
 function gireg.gslist_null_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_gslist_null_out()) == 1)
    local a = R.test_gslist_null_out()
    check(type(a) == 'table' and #a == 0)
 end
 
 function gireg.ghash_null_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_ghash_null_return()) == 1)
    check(R.test_ghash_null_return() == nil)
 end
@@ -737,7 +737,7 @@ local function size_htab(h)
 end
 
 function gireg.ghash_nothing_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local count = 0
    check(select('#', R.test_ghash_nothing_return()) == 1)
    local h = R.test_ghash_nothing_return()
@@ -747,7 +747,7 @@ function gireg.ghash_nothing_return()
 end
 
 function gireg.ghash_container_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local count = 0
    check(select('#', R.test_ghash_container_return()) == 1)
    local h = R.test_ghash_container_return()
@@ -757,7 +757,7 @@ function gireg.ghash_container_return()
 end
 
 function gireg.ghash_everything_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local count = 0
    check(select('#', R.test_ghash_everything_return()) == 1)
    local h = R.test_ghash_everything_return()
@@ -767,7 +767,7 @@ function gireg.ghash_everything_return()
 end
 
 function gireg.ghash_null_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_ghash_null_in(nil)
    R.test_ghash_null_in()
    check(not pcall(R.test_ghash_null_in,1))
@@ -776,12 +776,12 @@ function gireg.ghash_null_in()
 end
 
 function gireg.ghash_null_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_ghash_null_out() == nil)
 end
 
 function gireg.ghash_nothing_in()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_ghash_nothing_in({ foo = 'bar', baz = 'bat', qux = 'quux' })
    check(not pcall(R.test_ghash_nothing_in))
    check(not pcall(R.test_ghash_nothing_in, 1))
@@ -790,7 +790,7 @@ function gireg.ghash_nothing_in()
 end
 
 function gireg.ghash_nested_everything_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_ghash_nested_everything_return) == 1);
    local a = R.test_ghash_nested_everything_return()
    check(type(a) == 'table')
@@ -802,7 +802,7 @@ function gireg.ghash_nested_everything_return()
 end
 
 function gireg.enum()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.TestEnum.VALUE1 == 0)
    check(R.TestEnum.VALUE2 == 1)
    check(R.TestEnum.VALUE3 == -1)
@@ -823,7 +823,7 @@ function gireg.enum()
 end
 
 function gireg.flags()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.TestFlags.FLAG1 == 1)
    check(R.TestFlags.FLAG2 == 2)
    check(R.TestFlags.FLAG3 == 4)
@@ -843,7 +843,7 @@ function gireg.flags()
 end
 
 function gireg.flags_out()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local out = R.global_get_flags_out()
    check(type(out) == 'table')
    check(out.FLAG1 == true)
@@ -853,7 +853,7 @@ function gireg.flags_out()
 end
 
 function gireg.const()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    checkv(R.INT_CONSTANT, 4422, 'number')
    checkv(R.DOUBLE_CONSTANT, 44.22, 'number')
    checkv(R.STRING_CONSTANT, 'Some String', 'string')
@@ -861,7 +861,7 @@ function gireg.const()
 end
 
 function gireg.struct_a()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.TestStructA()) == 1)
    local a = R.TestStructA()
    check(type(a) == 'userdata')
@@ -899,7 +899,7 @@ function gireg.struct_a()
 end
 
 function gireg.struct_a_clone()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local a = R.TestStructA { some_int = 42, some_int8 = 12, some_double = 3.14,
 			     some_enum = R.TestEnum.VALUE2 }
    check(a == a)
@@ -919,7 +919,7 @@ function gireg.struct_a_clone()
 end
 
 function gireg.struct_b()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local b = R.TestStructB()
 
    -- Basic fields assignments.
@@ -953,7 +953,7 @@ function gireg.struct_b()
 end
 
 function gireg.struct_b_clone()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local b = R.TestStructB { some_int8 = 21, nested_a =
 			     { some_int = 42, some_int8 = 12,
 			       some_double = 3.14,
@@ -986,7 +986,7 @@ function gireg.struct_b_clone()
 end
 
 function gireg.boxed_a_equals()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.TestSimpleBoxedA({ some_int = 1, some_int8 = 2,
 			      some_double = 3.14 }):equals(
 	    R.TestSimpleBoxedA({ some_int = 1, some_int8 = 2,
@@ -1005,7 +1005,7 @@ function gireg.boxed_a_equals()
 end
 
 function gireg.boxed_a_const_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.test_simple_boxed_a_const_return()) == 1)
    local a = R.test_simple_boxed_a_const_return()
    check(a.some_int == 5)
@@ -1014,7 +1014,7 @@ function gireg.boxed_a_const_return()
 end
 
 function gireg.boxed_new()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(select('#', R.TestBoxed.new()) == 1)
    local bn = R.TestBoxed.new()
    local bac1 = R.TestBoxed.new_alternative_constructor1(1)
@@ -1026,7 +1026,7 @@ function gireg.boxed_new()
 end
 
 function gireg.boxed_copy()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local b = R.TestBoxed.new()
    b.some_int8 = 1
    b.nested_a = { some_int = 1, some_int8 = 2, some_double = 3.14 }
@@ -1040,7 +1040,7 @@ function gireg.boxed_copy()
 end
 
 function gireg.boxed_equals()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local b1 = R.TestBoxed.new()
    b1.some_int8 = 1
    b1.nested_a = { some_int = 1, some_int8 = 2, some_double = 3.14 }
@@ -1058,8 +1058,8 @@ function gireg.boxed_equals()
 end
 
 function gireg.closure_simple()
-   local R = lgi.Regress
-   local GObject = lgi.GObject
+   local R = LuaGObject.Regress
+   local GObject = LuaGObject.GObject
    local closure = GObject.Closure(function(...)
 				      check(select('#', ...) == 0)
 				      return 42
@@ -1071,8 +1071,8 @@ function gireg.closure_simple()
 end
 
 function gireg.closure_arg()
-   local GObject = lgi.GObject
-   local R = lgi.Regress
+   local GObject = LuaGObject.GObject
+   local R = LuaGObject.Regress
    local closure = GObject.Closure(function(int, ...)
 				      check(select('#', ...) == 0)
 				      return int
@@ -1084,7 +1084,7 @@ function gireg.closure_arg()
 end
 
 function gireg.gvalue_assign()
-   local GObject = lgi.GObject
+   local GObject = LuaGObject.GObject
    local V = GObject.Value
 
    local v = V()
@@ -1117,22 +1117,22 @@ function gireg.gvalue_assign()
 end
 
 function gireg.gvalue_arg()
-   local GObject = lgi.GObject
-   local R = lgi.Regress
+   local GObject = LuaGObject.GObject
+   local R = LuaGObject.Regress
    checkv(R.test_int_value_arg(GObject.Value('gint', 42)), 42, 'number')
 end
 
 function gireg.gvalue_return()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local v = R.test_value_return(43)
    checkv(v.value, 43, 'number')
    check(v.gtype == 'gint', 'incorrect value type')
 end
 
 function gireg.gvalue_date()
-   local GObject = lgi.GObject
-   local GLib = lgi.GLib
-   local R = lgi.Regress
+   local GObject = LuaGObject.GObject
+   local GLib = LuaGObject.GLib
+   local R = LuaGObject.Regress
    local v
    v = R.test_date_in_gvalue()
    check(v.gtype == 'GDate')
@@ -1149,8 +1149,8 @@ function gireg.gvalue_date()
 end
 
 function gireg.gvalue_strv()
-   local GObject = lgi.GObject
-   local R = lgi.Regress
+   local GObject = LuaGObject.GObject
+   local R = LuaGObject.Regress
    local v = R.test_strv_in_gvalue()
    check(v.gtype == 'GStrv')
    check(#v.value == 3)
@@ -1165,7 +1165,7 @@ function gireg.gvalue_strv()
 end
 
 function gireg.obj_create()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
    check(o)
    check(type(o) == 'userdata')
@@ -1176,9 +1176,9 @@ function gireg.obj_create()
 end
 
 function gireg.obj_methods()
-   local R = lgi.Regress
-   local GLib = lgi.GLib
-   local Gio = lgi.Gio
+   local R = LuaGObject.Regress
+   local GLib = LuaGObject.GLib
+   local Gio = LuaGObject.Gio
 
    if R.TestObj._method.do_matrix then
       R.TestObj._method.invoke_matrix = R.TestObj._method.do_matrix
@@ -1204,7 +1204,7 @@ function gireg.obj_methods()
 end
 
 function gireg.obj_null_args()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.func_obj_null_in(nil)
    R.func_obj_null_in()
    check(R.TestObj.null_out() == nil)
@@ -1212,57 +1212,57 @@ function gireg.obj_null_args()
 end
 
 function gireg.obj_virtual_methods()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
    check(o:do_matrix('unused') == 42)
 end
 
 function gireg.obj_prop_int()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.int == 0)
    o.int = 42
    check(o.int == 42)
    check(not pcall(function() o.int = {} end))
-   check(not pcall(function() o.int = 'lgi' end))
+   check(not pcall(function() o.int = 'LuaGObject' end))
    check(not pcall(function() o.int = nil end))
    check(not pcall(function() o.int = function() end end))
 end
 
 function gireg.obj_prop_float()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.float == 0)
    o.float = 42.1
    checkvf(o.float, 42.1, 0.00001)
    check(not pcall(function() o.float = {} end))
-   check(not pcall(function() o.float = 'lgi' end))
+   check(not pcall(function() o.float = 'LuaGObject' end))
    check(not pcall(function() o.float = nil end))
    check(not pcall(function() o.float = function() end end))
 end
 
 function gireg.obj_prop_double()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.double == 0)
    o.double = 42.1
    checkvf(o.double, 42.1, 0.0000000001)
    check(not pcall(function() o.double = {} end))
-   check(not pcall(function() o.double = 'lgi' end))
+   check(not pcall(function() o.double = 'LuaGObject' end))
    check(not pcall(function() o.double = nil end))
    check(not pcall(function() o.double = function() end end))
 end
 
 function gireg.obj_prop_string()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.string == nil)
-   o.string = 'lgi'
-   check(o.string == 'lgi')
+   o.string = 'LuaGObject'
+   check(o.string == 'LuaGObject')
    o.string = nil
    check(o.string == nil)
    check(not pcall(function() o.string = {} end))
@@ -1270,7 +1270,7 @@ function gireg.obj_prop_string()
 end
 
 function gireg.obj_prop_bare()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.bare == nil)
@@ -1285,13 +1285,13 @@ function gireg.obj_prop_bare()
    check(o.bare == nil)
    check(not pcall(function() o.bare = {} end))
    check(not pcall(function() o.bare = 42 end))
-   check(not pcall(function() o.bare = 'lgi' end))
+   check(not pcall(function() o.bare = 'LuaGObject' end))
    check(not pcall(function() o.bare = function() end end))
    check(not pcall(function() o.bare = R.TestBoxed() end))
 end
 
 function gireg.obj_prop_boxed()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.boxed == nil)
@@ -1302,13 +1302,13 @@ function gireg.obj_prop_boxed()
    check(o.boxed == nil)
    check(not pcall(function() o.boxed = {} end))
    check(not pcall(function() o.boxed = 42 end))
-   check(not pcall(function() o.boxed = 'lgi' end))
+   check(not pcall(function() o.boxed = 'LuaGObject' end))
    check(not pcall(function() o.boxed = function() end end))
    check(not pcall(function() o.boxed = R.TestObj() end))
 end
 
 function gireg.obj_prop_hash()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.hash_table == nil)
@@ -1316,14 +1316,14 @@ function gireg.obj_prop_hash()
    local ov = o.hash_table
    check(ov.a == 1 and ov.b == 2)
    check(not pcall(function() o.hash_table = 42 end))
-   check(not pcall(function() o.hash_table = 'lgi' end))
+   check(not pcall(function() o.hash_table = 'LuaGObject' end))
    check(not pcall(function() o.hash_table = function() end end))
    check(not pcall(function() o.hash_table = R.TestObj() end))
    check(not pcall(function() o.hash_table = R.TestBoxed() end))
 end
 
 function gireg.obj_prop_list()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
    check(o.hash_table == nil)
@@ -1331,17 +1331,17 @@ function gireg.obj_prop_list()
    local ov = o.list
    check(#ov == 3 and ov[1] == 'one' and ov[2] == 'two' and ov[3] == 'three')
    check(not pcall(function() o.list = 42 end))
-   check(not pcall(function() o.list = 'lgi' end))
+   check(not pcall(function() o.list = 'LuaGObject' end))
    check(not pcall(function() o.list = function() end end))
    check(not pcall(function() o.list = R.TestObj() end))
    check(not pcall(function() o.list = R.TestBoxed() end))
 end
 
 function gireg.obj_prop_dynamic()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestObj()
 
-   -- Remove static property information, force lgi to use dynamic
+   -- Remove static property information, force LuaGObject to use dynamic
    -- GLib property system.
    local old_prop = R.TestObj.int
    R.TestObj._property.int = nil
@@ -1361,7 +1361,7 @@ function gireg.obj_prop_dynamic()
 end
 
 function gireg.obj_subobj()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestSubObj()
    local pv = R.TestObj()
    check(o:instance_method() == 0)
@@ -1377,7 +1377,7 @@ function gireg.obj_subobj()
 end
 
 function gireg.obj_naming()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestWi8021x()
    o:set_testbool(true)
    check(o.testbool == true)
@@ -1386,7 +1386,7 @@ function gireg.obj_naming()
 end
 
 function gireg.obj_floating()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local o = R.TestFloating()
    check(o)
    o = nil
@@ -1395,18 +1395,18 @@ function gireg.obj_floating()
 end
 
 function gireg.obj_fundamental()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local f = R.TestFundamentalSubObject.new('foo-nda-mental')
    check(f)
    check(f.data == 'foo-nda-mental')
-   local v = lgi.GObject.Value(R.TestFundamentalSubObject, f)
+   local v = LuaGObject.GObject.Value(R.TestFundamentalSubObject, f)
    check(v.value == f)
    f = nil
    collectgarbage()
 end
 
 function gireg.callback_simple()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_callback(function() return 42 end) == 42)
    check(R.test_callback() == 0)
    check(R.test_callback(nil) == 0)
@@ -1420,7 +1420,7 @@ function gireg.callback_simple()
 end
 
 function gireg.callback_data()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    local called
    R.test_simple_callback(function() called = true end)
    check(called)
@@ -1439,7 +1439,7 @@ function gireg.callback_data()
 end
 
 function gireg.callback_notified()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    check(R.test_callback_destroy_notify(function() return 1 end) == 1)
    check(R.test_callback_destroy_notify(function() return 2 end) == 2)
    check(R.test_callback_destroy_notify(function() return 3 end) == 3)
@@ -1454,7 +1454,7 @@ function gireg.callback_notified()
 end
 
 function gireg.callback_async()
-   local R = lgi.Regress
+   local R = LuaGObject.Regress
    R.test_callback_async(function() return 1 end)
    collectgarbage()
    collectgarbage()
