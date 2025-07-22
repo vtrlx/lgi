@@ -12,9 +12,10 @@ LuaGObject is tested and compatible with PUC-Rio Lua (versions 5.1, 5.2, 5.3,
 and 5.4) as well as LuaJIT2. Other Lua implementations are not officially
 supported.
 
-This project is forked from [LGI](http://github.com/lgi-devs/lgi).
+This project is forked from [LGI](http://github.com/lgi-devs/lgi) and shares
+many of its internals, quirks, and overall structure.
 
-## Installation:
+## Installation
 
 In order to be able to compile the native part of LuaGObject,
 GIRepository-2 >= 2.80.0 development package must be installed. The development

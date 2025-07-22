@@ -1,67 +1,80 @@
 # Gtk Support
 
-LGI's Gtk support is based on gobject-introspection. In practice, this means
-that Gtk3, Gtk4, and libadwaita ("Adw") should work out of the box.
+LuaGObject's Gtk support is based on GObject-Introspection. In practice, this
+means that Gtk3, Gtk4, and libadwaita ("Adw") should work out of the box.
 
-Gtk4 and Adw are provided without any additional features specific to LGI. Both
-libraries fully support introspection, and should function as expected according
-to their API documentation.
+Gtk4 and Adw support are provided without any additional features specific to
+LuaGObject. Both libraries fully support introspection, and should function as
+expected according to their API documentation.
 
-For Gtk3, LGI provides some extensions in order to support non-introspectable
-features and to provide easier and more Lua-like access to some important Gtk3
-features. The rest of this document describes enhancements LGI provides when
-using Gtk3.
+For Gtk3, LuaGObject provides some extensions in order to support
+unintrospectable features and to provide easier and more Lua-like access to
+certain Gtk3 objects. The rest of this document describes enhancements
+LuaGObject provides when using Gtk3.
+
+To explicitly use Gtk3 in LuaGObject, pass the version parameter to
+`LuaGObject.require` like so:
+
+    local LuaGObject = require 'LuaGObject'
+    local Gtk = LuaGObject.require('Gtk', '3.0')
+
+Please note that different versions of the same library cannot be loaded at the
+same time. This means if you've already loaded a library dependent on a
+different version of Gtk (such as Adw or GtkSourceView-5), you won't be able
+to load Gtk3.
+
+Generally speaking, it's recommended to avoid Gtk3 for new applications unless
+writing them for a platform that has not yet moved on to Gtk4 or newer. If this
+is the case for you, read on.
 
 ## Basic Widget and Container support
 
-### Style properties access
+### Accessing Style Properties
 
-To read style property values of the widget, a `style` attribute is
-implemented.  Following example reads `resize-grip-height` style
-property from Gtk.Window instance:
+To read style property values of a widget, a `style` attribute is implemented by
+LuaGObject. The following example reads the `resize-grip-height` style property
+from a Gtk.Window instance:
 
     local window = Gtk.Window()
     print(window.style.resize_grip_height)
 
-### Gtk.Widget width and height properties
+### Gtk.Widget Width and Height Properties
 
-lgi adds new `width` and `height` properties to Gtk.Widget.  Reading them
+LuaGObject adds new `width` and `height` properties to Gtk.Widget. Reading them
 yields allocated size (`Gtk.Widget.get_allocated_size()`), writing them sets
-new size request (`Gtk.Widget.set_size_request()`).  These usages typically
-means what an application needs - actual allocated size to draw on when
-reading, and request for specific size when writing them.
+a new size request (`Gtk.Widget.set_size_request()`). These usages typically
+mean what application logic needs: get the actual allocated size to draw on when
+reading, and request a specific size when writing.
 
-### Child properties
+### Child Properties
 
-Child properties are properties of the relation between a container
-and child.  A Lua-friendly access to these properties is implemented
-by `property` attribute of `Gtk.Container`.  Following example
-illustrates writing and reading of `width` property of `Gtk.Grid`
-and child `Gtk.Button`:
+Child properties are properties of the relation between a container and child.
+A Lua-friendly access to these properties is implemented through the `property`
+attribute of `Gtk.Container`. The following example illustrates writing and
+reading of `width` property of `Gtk.Grid` and child `Gtk.Button`:
 
     local grid, button = Gtk.Grid(), Gtk.Button()
     grid:add(button)
     grid.property[button].width = 2
     print(grid.property[button].width)   -- prints 2
 
-### Adding children to container
+### Adding Children to a Container
 
-Basic method for adding child widget into container is
-`Gtk.Container.add()` method.  This method is overloaded by Lgi so
-that it accepts either widget, or table containing widget at index 1
-and the rest `name=value` pairs define child properties.  Therefore
-this method is full replacement of unintrospectable
-`gtk_container_add_with_properties()` function.  Example from previous
-chapter simplified using this technique follows:
+The intended way to add children to a container is through the
+`Gtk.Container.add()` method. This method is overloaded by LuaGObject so
+that it accepts either a widget, or a table containing a widget at index 1 with
+the rest of the `name=value` pairs defining the child's properties. Therefore,
+this method is a full replacement of the unintrospectable
+`gtk_container_add_with_properties()` function. Let's simplify the previous
+section's example with this syntax:
 
     local grid, button = Gtk.Grid(), Gtk.Button()
     grid:add { button, width = 2 }
     print(grid.property[button].width)    -- prints 2
 
-Another important feature of containers is that they have extended
-constructor, and array part of constructor argument table can contain
-widgets to be added.  Therefore, previous example can be written like
-this:
+Another important feature of containers is that they have an extended
+constructor, the constructor table argument's array part can contain widgets to
+be added as children. The previous example can be simplified further as:
 
     local button = Gtk.Button()
     local grid = Gtk.Grid {
@@ -69,27 +82,25 @@ this:
     }
     print(grid.property[button].width)    -- prints 2
 
-### 'id' property of widgets
+### Gtk.Widget `id` Property
 
-Another important feature is that all widgets support `id` property,
-which can hold an arbitrary string which is used to identify the
-widget.  `id` is assigned by caller, defaults to `nil`.  To look up
-widget with specified id in the container's widget tree (i.e. not only
-in direct container children), query `child` property of the container
-with requested id.  Previous example rewritten with this technique
-would look like this:
+Another important feature is that all widgets support the `id` property, which
+can hold an arbitrary string which is used to identify the widget. `id` is
+assigned by the user and defaults to `nil`. To find a widget using the specified
+id in the container's widget tree (i.e. not only in direct container children),
+query the `child` property of the container with the requested id. Rewriting the
+previous example using this technique:
 
     local grid = Gtk.Grid {
        { Gtk.Button { id = 'button' }, width = 2 }
     }
     print(grid.property[grid.child.button].width)    -- prints 2
 
-The advantage of these features is that they allow using Lua's
-data-description face for describing widget hierarchies in natural
-way, instead of human-unfriendly `Gtk.Builder`'s XML.  A small example
-follows:
+The advantage of these features is that they allow using Lua's data description
+syntax for describing widget hierarchies in a natural way, instead of
+`Gtk.Builder`'s human-unfriendly XML. To build a very complicated widget tree:
 
-    Gtk = lgi.Gtk
+    Gtk = LuaGObject.Gtk
     local window = Gtk.Window {
        title = 'Application',
        default_width = 640, default_height = 480,
@@ -106,7 +117,7 @@ follows:
        }
     }
 
-    local n = 0    
+    local n = 0
     function window.child.about:on_clicked()
        n = n + 1
        window.child.view.buffer.text = 'Clicked ' .. n .. ' times'
@@ -118,22 +129,21 @@ follows:
 
     window:show_all()
 
-Run `samples/console.lua`, paste example into entry view and enjoy.
-The `samples/console.lua` example itself shows more complex usage of
-this pattern.
+Run `samples/console.lua`, paste the example into its entry view and enjoy.
+The `samples/console.lua` example itself shows more complex usage of this
+pattern.
 
 ## Gtk.Builder
 
-Although Lua's declarative style for creating widget hierarchies (as
-presented in chapter discussing `Gtk.Container` extensions) is generally
+Although Lua's declarative style for creating widget hierarchies is generally
 preferred to builder's XML authoring by hand, `Gtk.Builder` can still be
 useful when widget hierarchies are designed in some external tool like
 `glade`.
 
-Original `gtk_builder_add_from_file` and `gtk_builder_add_from_string`
+Normally, `gtk_builder_add_from_file` and `gtk_builder_add_from_string`
 return `guint` instead of `gboolean`, which would make direct usage
-from Lua awkward.  Lgi overrides these methods to return `boolean` as
-the first return value, so that typical
+from Lua awkward. LuaGObject overrides these methods to return `boolean` as
+the first return value, so that the construction
 `assert(builder:add_from_file(filename))` can be used.
 
 A new `objects` attribute provides direct access to loaded objects by
@@ -141,17 +151,17 @@ their identifier, so that instead of `builder:get_object('id')` it
 is possible to use `builder.objects.id`
 
 `Gtk.Builder.connect_signals(handlers)` tries to connect all signals
-to handlers which are defined in `handlers` table.  Functions from
+to handlers which are defined in `handlers` table. Functions from
 `handlers` table are invoked with target object on which is signal
 defined as first argument, but it is possible to define `object`
 attribute, in this case the object instance specified in `object`
-attribute is used.  `after` attribute is honored, but `swapped` is
-completely ignored, as its semantics for lgi is unclear and not very
+attribute is used. `after` attribute is honored, but `swapped` is
+completely ignored, as its semantics for LuaGObject is unclear and not very
 useful.
 
 ## Gtk.Action and Gtk.ActionGroup
 
-Lgi provides new method `Gtk.ActionGroup:add()` which generally replaces
+LuaGObject provides new method `Gtk.ActionGroup:add()` which generally replaces
 unintrospectable `gtk_action_group_add_actions()` family of functions.
 `Gtk.ActionGroup:add()` accepts single argument, which may be one of:
 
@@ -183,7 +193,7 @@ constructor, as demonstrated by following example:
 
 To access specific action from the group, a read-only attribute `action`
 is added to the group, which allows to be indexed by action name to
-retrieve.  So continuing the example above, we can implement 'new'
+retrieve. So continuing the example above, we can implement 'new'
 action like this:
 
     function group.action.new:on_activate()
@@ -213,32 +223,32 @@ Following example demonstrates both capabilities:
 ## TreeView and related classes
 
 `Gtk.TreeView` and related classes like `Gtk.TreeModel` are one of the
-most complicated objects in the whole `Gtk`.  Lgi adds some overrides
+most complicated objects in the whole `Gtk`. LuaGObject adds some overrides
 to simplify the work with them.
 
 ### Gtk.TreeModel
 
-Lgi supports direct indexing of treemodel instances by iterators
-(i.e. `Gtk.TreeIter` instances).  To get value at specified column
-number, index the resulting value again with column number.  Note that
-although `Gtk` uses 0-based column numbers, Lgi remaps them to 1-based
+LuaGObject supports direct indexing of treemodel instances by iterators
+(i.e. `Gtk.TreeIter` instances). To get value at specified column
+number, index the resulting value again with column number. Note that
+although `Gtk` uses 0-based column numbers, LuaGObject remaps them to 1-based
 numbers, because working with 1-based arrays is much more natural for
 Lua.
 
-Another extension provided by Lgi is
+Another extension provided by LuaGObject is
 `Gtk.TreeModel:pairs([parent_iter])` method for Lua-native iteration of
-the model.  This method returns 3 values suitable to pass to generic
-`for`, so that standard Lua iteration protocol can be used.  See the
+the model. This method returns 3 values suitable to pass to generic
+`for`, so that standard Lua iteration protocol can be used. See the
 example in the next chapter which uses this technique.
 
 ### Gtk.ListStore and Gtk.TreeStore
 
 Standard `Gtk.TreeModel` implementations, `Gtk.ListStore` and
 `Gtk.TreeStore` extend the concept of indexing model instance with
-iterators also to writing values.  Indexing resulting value with
+iterators also to writing values. Indexing resulting value with
 1-based column number allows writing individual values, while
 assigning the table containing column-keyed values allows assigning
-multiple values at once.  Following example illustrates all these
+multiple values at once. Following example illustrates all these
 techniques:
 
     local PersonColumn = { NAME = 1, AGE = 2, EMPLOYEE = 3 }
@@ -284,19 +294,19 @@ are provided also for `Gtk.TreeStore`.
 
 ### Gtk.TreeView and Gtk.TreeViewColumn
 
-Lgi provides `Gtk.TreeViewColumn:set(cell, data)` method, which allows
+LuaGObject provides `Gtk.TreeViewColumn:set(cell, data)` method, which allows
 assigning either a set of `cell` renderer attribute->model column
 pairs (in case that `data` argument is a table), or assigns custom
 data function for specified cell renderer (when `data` is a function).
-Note that column must already have assigned cell renderer.  See
+Note that column must already have assigned cell renderer. See
 `gtk_tree_view_column_set_attributes()` and
 `gtk_tree_view_column_set_cell_data_func()` for precise documentation.
 
 The override `Gtk.TreeViewColumn:add(def)` composes both adding new
-cellrenderer and setting attributes or data function.  `def` argument
+cellrenderer and setting attributes or data function. `def` argument
 is a table, containing cell renderer instance at index 1 and `data` at
-index 2.  Optionally, it can also contain `expand` attribute (set to
-`true` or `false`) and `align` (set either to `start` or `end`).  This
+index 2. Optionally, it can also contain `expand` attribute (set to
+`true` or `false`) and `align` (set either to `start` or `end`). This
 method is basically combination of `gtk_tree_view_column_pack_start()`
 or `gtk_tree_view_column_pack_end()` and `set()` override method.
 
