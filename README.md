@@ -77,7 +77,7 @@ examples—especially for Gtk—are quite dated and may no longer be accurate.
 ## Credits
 
 LuaGObject would not be possible without the work of Christian Hergert, who
-did the initial work on keeping LGI up to date.
+did the initial work on moving LGI to GIRepository 2.80.
 
 LuaGObject is also built on the work of LGI's developers, listed below in no
 particular order.
@@ -108,6 +108,8 @@ particular order.
 - First version as "LuaGObject"
 - Support for PUC-Rio Lua 5.4
 - Support for Gtk4 and related libraries such as libAdwaita
+- `Gio.Async` override now supports Adwaita-style async, which entirely omits
+  equivalent `_sync` functions
 - Now based on GIRepository-2.0, a hard requirement for using with GNOME 49 and
   later
 - Support for building using Meson

@@ -106,14 +106,16 @@ local function async_element(name, accessor, param_self, param_object)
    -- Check, whether we have async_xxx request.
    local name_root = type(name) == 'string' and name:match('^async_(.+)$')
    if name_root then
+      local root = accessor(param_self, param_object, name_root)
       local async = accessor(param_self, param_object, name_root .. '_async')
       local finish = accessor(param_self, param_object, name_root .. '_finish')
 
-      -- Some clients name async method just 'name' and use
-      -- 'name_sync' for synchronous variant.
-      if finish and not async and accessor(param_self, param_object,
-					   name_root .. '_sync') then
-	 async = accessor(param_self, param_object, name_root)
+      -- Some libraries will instead name the async version without any suffix
+      -- and may not provide a synchronous version at all.
+      -- If the user is trying to call an 'async_' function, assume that this
+      -- root name is the asynchronous initiator.
+      if finish and not async and root then
+	 async = root
       end
 
       -- We have async/finish pair, create element table containing
