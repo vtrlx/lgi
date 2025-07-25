@@ -152,30 +152,30 @@ is possible to use `builder.objects.id`
 
 `Gtk.Builder.connect_signals(handlers)` tries to connect all signals
 to handlers which are defined in `handlers` table. Functions from
-`handlers` table are invoked with target object on which is signal
-defined as first argument, but it is possible to define `object`
+`handlers` table are invoked with the target object on which a signal
+is emitted as the first argument, but it is possible to define the `object`
 attribute, in this case the object instance specified in `object`
-attribute is used. `after` attribute is honored, but `swapped` is
-completely ignored, as its semantics for LuaGObject is unclear and not very
+the attribute is used. The `after` attribute is honored, but `swapped` is
+completely ignored, as its semantics for LuaGObject are unclear and not very
 useful.
 
 ## Gtk.Action and Gtk.ActionGroup
 
-LuaGObject provides new method `Gtk.ActionGroup:add()` which generally replaces
-unintrospectable `gtk_action_group_add_actions()` family of functions.
-`Gtk.ActionGroup:add()` accepts single argument, which may be one of:
+LuaGObject provides a new method `Gtk.ActionGroup:add()` which generally
+replaces the unintrospectable `gtk_action_group_add_actions()` family of
+functions. `Gtk.ActionGroup:add()` accepts single argument, which may be one of:
 
-- an instance of `Gtk.Action` - this is identical with calling
+- an instance of `Gtk.Action` - this is identical to calling
   `Gtk.Action.add_action()`.
 - a table containing instance of `Gtk.Action` at index 1, and
-  optionally having attribute `accelerator`; this is a shorthand for
+  optionally having an attribute `accelerator`; this is a shorthand for
   `Gtk.ActionGroup.add_action_with_accel()`
-- a table with array of `Gtk.RadioAction` instances, and optionally
+- a table with array of `Gtk.RadioAction` instances, and optionally an
   `on_change` attribute containing function to be called when the radio
   group state is changed.
 
-All actions or groups can be added by an array part of `Gtk.ActionGroup`
-constructor, as demonstrated by following example:
+All actions or groups can be added through an array part of the
+`Gtk.ActionGroup` constructor, as demonstrated by the following example:
 
     local group = Gtk.ActionGroup {
        Gtk.Action { name = 'new', label = "_New" },
@@ -193,8 +193,8 @@ constructor, as demonstrated by following example:
 
 To access specific action from the group, a read-only attribute `action`
 is added to the group, which allows to be indexed by action name to
-retrieve. So continuing the example above, we can implement 'new'
-action like this:
+retrieve an action. Continuing the example above, we can implement an action
+named 'new' like this:
 
     function group.action.new:on_activate()
        print("Action 'New' invoked")
@@ -203,15 +203,15 @@ action like this:
 ## Gtk.TextTagTable
 
 It is possible to populate new instance of the tag table with tags
-during the construction, an array part of constructor argument table is
+during the construction, the array part of the constructor argument table is
 expected to contain `Gtk.TextTag` instances which are then automatically
 added to the table.
 
-A new attribute `tag` is added, provides Lua table which can be indexed
-by string representing tag name and returns the appropriate tag (so it is
-essentially a wrapper around `Gtk.TextTagTable:lookup()` method).
+A new attribute `tag` is added which provides a Lua table which can be indexed
+by a string representing the tag name and returns the appropriate tag (so it is
+essentially a wrapper around the `Gtk.TextTagTable:lookup()` method).
 
-Following example demonstrates both capabilities:
+The following example demonstrates both capabilities:
 
     local tag_table = Gtk.TextTagTable {
        Gtk.TextTag { name = 'plain', color = 'blue' },
@@ -224,32 +224,30 @@ Following example demonstrates both capabilities:
 
 `Gtk.TreeView` and related classes like `Gtk.TreeModel` are one of the
 most complicated objects in the whole `Gtk`. LuaGObject adds some overrides
-to simplify the work with them.
+to simplify working with them.
 
 ### Gtk.TreeModel
 
 LuaGObject supports direct indexing of treemodel instances by iterators
-(i.e. `Gtk.TreeIter` instances). To get value at specified column
-number, index the resulting value again with column number. Note that
+(i.e. `Gtk.TreeIter` instances). To get a value at the specified column
+number, index the resulting value again with the column number. Note that
 although `Gtk` uses 0-based column numbers, LuaGObject remaps them to 1-based
-numbers, because working with 1-based arrays is much more natural for
-Lua.
+numbers, because working with 1-based arrays is much more natural for Lua.
 
-Another extension provided by LuaGObject is
+Another extension provided by LuaGObject is the
 `Gtk.TreeModel:pairs([parent_iter])` method for Lua-native iteration of
-the model. This method returns 3 values suitable to pass to generic
-`for`, so that standard Lua iteration protocol can be used. See the
-example in the next chapter which uses this technique.
+the model. This method returns 3 values suitable to pass to the generic
+`for` loop, so that standard Lua iteration protocol can be used. See the
+example in the next section to learn how to use this.
 
 ### Gtk.ListStore and Gtk.TreeStore
 
-Standard `Gtk.TreeModel` implementations, `Gtk.ListStore` and
-`Gtk.TreeStore` extend the concept of indexing model instance with
-iterators also to writing values. Indexing resulting value with
-1-based column number allows writing individual values, while
-assigning the table containing column-keyed values allows assigning
-multiple values at once. Following example illustrates all these
-techniques:
+The standard `Gtk.TreeModel` implementations, `Gtk.ListStore` and
+`Gtk.TreeStore` extend the concept of an indexing model instance with iterators
+to writing values as well. Indexing resultings value with a 1-based column
+number allows writing individual values, while assigning a table containing
+column-keyed values allows assigning multiple values at once. The following
+example illustrates all these techniques:
 
     local PersonColumn = { NAME = 1, AGE = 2, EMPLOYEE = 3 }
     local store = Gtk.ListStore.new {
@@ -272,9 +270,9 @@ techniques:
        print(p[PersonColumn.NAME], p[PersonColumn.AGE])
     end
 
-Note that `append` and `insert` methods are overridden and accept
-additional parameter containing table with column/value pairs, so
-creation section of previous example can be simplified to:
+Note that the `append` and `insert` methods are overridden to accept an
+additional parameter containing a table with column/value pairs, so
+the creation section of previous example can be simplified to:
 
     local person = store:append {
        [PersonColumn.NAME] = "John Doe",
@@ -282,42 +280,42 @@ creation section of previous example can be simplified to:
        [PersonColumn.EMPLOYEE] = true,
     }
 
-Note that you also can use numbers or strings as indexes. Useful
-example is reading values selected from `Gtk.ComboBox`:
+You also can use numbers or strings as indexes. A use for this is reading
+values selected from `Gtk.ComboBox`:
 
     local index = MyComboBox:get_active() -- Index is string, but numbers is also supported
     print("Active index: ", index)
     print("Selected value: ", MyStore[index])
 
-Note that while the example uses `Gtk.ListStore`, similar overrides
-are provided also for `Gtk.TreeStore`.
+While this example uses `Gtk.ListStore`, similar overrides are also provided for
+`Gtk.TreeStore`.
 
 ### Gtk.TreeView and Gtk.TreeViewColumn
 
-LuaGObject provides `Gtk.TreeViewColumn:set(cell, data)` method, which allows
+LuaGObject provides a `Gtk.TreeViewColumn:set(cell, data)` method, which allows
 assigning either a set of `cell` renderer attribute->model column
-pairs (in case that `data` argument is a table), or assigns custom
-data function for specified cell renderer (when `data` is a function).
-Note that column must already have assigned cell renderer. See
+pairs (in case that `data` argument is a table), or a custom
+data function for a specified cell renderer (when `data` is a function).
+Note that the column must already have a cell renderer assigned. See
 `gtk_tree_view_column_set_attributes()` and
 `gtk_tree_view_column_set_cell_data_func()` for precise documentation.
 
-The override `Gtk.TreeViewColumn:add(def)` composes both adding new
-cellrenderer and setting attributes or data function. `def` argument
-is a table, containing cell renderer instance at index 1 and `data` at
-index 2. Optionally, it can also contain `expand` attribute (set to
-`true` or `false`) and `align` (set either to `start` or `end`). This
-method is basically combination of `gtk_tree_view_column_pack_start()`
+The override `Gtk.TreeViewColumn:add(def)` combines both adding a new
+cell renderer and setting attributes or a data function. The `def` argument
+is a table, containing a cell renderer instance at index 1 and the `data` at
+index 2. Optionally, it can also contain an `expand` attribute (set to
+`true` or `false`) and `align` attribute (set either to `start` or `end`). This
+method is basically a combination of `gtk_tree_view_column_pack_start()`
 or `gtk_tree_view_column_pack_end()` and `set()` override method.
 
-Array part of `Gtk.TreeViewColumn` constructor call is mapped to call
-`Gtk.TreeViewColumn:add()` method, and array part of `Gtk.TreeView`
-constructor call is mapped to call `Gtk.TreeView:append_column()`, and
-this allows composing the whole initialized treeview in a declarative
-style like in the example below:
+The array part of the `Gtk.TreeViewColumn` constructor call is mapped to call
+the `Gtk.TreeViewColumn:add()` method, and the array part of `Gtk.TreeView`
+constructor call is mapped to call `Gtk.TreeView:append_column()`. This allows
+composing the whole initialized `TreeView`s in a declarative style as shown
+below:
 
-    -- This example reuses 'store' model created in examples in
-    -- Gtk.TreeModel chapter.
+    -- This example reuses 'store' model created in examples in the
+    -- Gtk.TreeModel section above.
     local view = Gtk.TreeView {
        model = store,
        Gtk.TreeViewColumn {

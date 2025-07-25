@@ -105,16 +105,18 @@ particular order.
 
 ### 0.10.0 (prerelease)
 
-- First version as "LuaGObject"
+- First version as LuaGObject
 - Support for PUC-Rio Lua 5.4
-- Support for Gtk4 and related libraries such as libAdwaita
-- `Gio.Async` override now supports Adwaita-style async, which entirely omits
-  equivalent `_sync` functions
-- Now based on GIRepository-2.0, a hard requirement for using with GNOME 49 and
+- Support for Gtk4 and related libraries such as libadwaita (namespaced as Adw)
+- The `Gio.Async` override now supports newer-style async, where functions are
+  named `<name>` and `<name>_finish` without any `_async` labels
+- Enum and flag parameters are now optional, defaulting to a 0 value
+- Now based on GIRepository-2.0, allowing use of LuaGObject on GNOME 49 and
   later
 - Support for building using Meson
 
-### Older versions
+### Older Versions
 
-See the "History" subheading in LGI's
+LuaGObject was forked from LGI after it stopped receiving new releases. To see
+the version history of its older versions, see the "History" subheading in LGI's
 [README](http://github.com/lgi-devs/lgi#history).

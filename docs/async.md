@@ -17,7 +17,8 @@ one's code hierarchy with callbacks while still retaining the advantages of
 non-blocking I/O, and LuaGObject provides helpers to bridge this gap.
 
 Gio-style asynchronous functions always come as pairs of two methods:
-`<name>_async` which starts an operation, and `<name>_finish` which is called
+`<name>_async` (sometimes just `<name>` without the suffix, especially in newer
+libraries) which starts an operation, and `<name>_finish` which is called
 within a registered callback and allows for the retrieval of an operation's
 results. When LuaGObject's `Gio` override is loaded, LuaGObject will detect
 these async pairs—within all namespaces, not just Gio's—and when these paired

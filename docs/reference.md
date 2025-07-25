@@ -34,10 +34,10 @@ inserts, which are formatted according to Lua's `string.format` conventions.
 
 - `LuaGObject.yield()`
 
-When called, unlocks LuaGObject state lock, for a while, thus allowing
-potentially blocked callbacks or signals to enter the Lua state. When using
-LuaGObject with GLib's MainLoop (which is automatically started when
-intializing Gtk or Adw), this call is not needed at all.
+When called, unlocks LuaGObject's state lock, thus allowing potentially blocked
+callbacks or signals to enter the Lua state. When using LuaGObject with GLib's
+MainLoop (which is automatically started when intializing Gtk or Adw), this call
+is not needed at all.
 
 ## GObject Basic Constructs
 

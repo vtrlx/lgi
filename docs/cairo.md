@@ -1,41 +1,44 @@
-# cairo support
+# Cairo
 
-Cairo library is an important part of any GTK-based setup, because GTK
-internally uses cairo exclusively for painting.  However, cairo itself
-is not built using GObject technology and thus imposes quite a problem
-for any GObject Introspection based binding, such as lgi.
+Cairo is a library for drawing graphics. It is a core part of many Gtk apps,
+as Gtk uses Cairo for much of its drawing. Cairo is thus an important part of
+any Gtk app, but Cairo is also not built on GObject and thus is not
+introspectable through GObject-Introspection which causes significant problems
+for any binding based on GObject-Introspection, including LuaGObject. To
+alleviate this, LuaGObject provides its own bindings to some Cairo features.
 
-## Basic binding description
+## Basic Cairo Bindings
 
-Although internal implementation is a bit different from other fully
-introspection-enabled libraries, this difference is not visible to lgi
-user.  cairo must be imported in the same way as other libraries, e.g.
+Although the implementation of the Cairo binding is different from other
+GObject—Introspection-based bindings, the difference is not noticeable when
+using LuaGObject. Cairo is imported the same way as other libraries:
 
-    local lgi = require 'lgi'
-    local cairo = lgi.cairo
+    local LuaGObject = require 'LuaGObject'
+    local cairo = LuaGObject.cairo
 
-Cairo library itself is organized using object-oriented style, using C
-structures as objects (e.g. `cairo_t`, `cairo_surface_t`) and
-functions as methods acting upon these objects.  lgi exports objects
-as classes in the `cairo` namespace, e.g. `cairo.Context`,
-`cairo.Surface` etc.  To create new object instance, cairo offers
-assorted `create` methods, e.g. `cairo_create` or
-`cairo_pattern_create`, which are mapped as expected to
-`cairo.Context.create` and `cairo.Pattern.create`.  It is also
-possible to invoke them using lgi's 'constructor' syntax, i.e. to
-create new context on specified surface, it is possible to use either
-`local cr = cairo.Context.create(surface)` or `local cr =
-cairo.Context(surface)`.
+As with GObject-based libraries which are implemented in C, Cairo's library is
+internally organized using an object-oriented style, with structs
+(e.g.: `cairo_t`, `cairo_surface_t`) acting as objects and functions being
+as methods which act on the objects. LuaGObject exports these within a namespace
+named `cairo` (e.g.: `cairo.Context`, `cairo.Surface`). To create a new object
+instance, Cairo has built-in `_create` methods for its classes, and these are
+mapped to `cairo.Surface.create` for `cairo_surface_create`, etc. It is also
+possible to invoke them using the constructor syntax LuaGObject makes available
+for GObject-based libraries by calling the namespace table directly, making
+the following lines equivalent:
 
-### Version checking
+    local cr = cairo.Context.create(surface)
 
-`cairo.version` and `cairo.version_string` fields contain current
-runtime cairo library version, as returned by their C counterparts
-`cairo_version()` and `cairo_version_string()`.  Original
-`CAIRO_VERSION_ENCODE` macro is reimplemented as
-`cairo.version_encode(major, minor, micro)`.  For example, following
-section shows how to guard code which should be run only when cairo
-version is at least 1.12:
+    local cr = cairo.Context(surface)
+
+### Version Checking
+
+The fields `cairo.version` and `cairo.version_string` contain the runtime's
+current cairo library version as returned by the C functions `cairo_version()`
+and `cairo_version_string()`. The C-side `CAIRO_VERSION_ENCODE()` macro is
+reimplemented as `cairo.version_encode(major, minor, micro)`, and can be used
+to compare against the contents of `cairo.version` for version-specific
+functionality. To run separate code with Cairo 1.12 or later:
 
     if cairo.version >= cairo.version_encode(1, 12, 0) then
        -- Cairo 1.12-specific code
@@ -43,135 +46,132 @@ version is at least 1.12:
        -- Fallback to older cairo version code
     end
 
-### Synthetic properties
+### Synthetic Properties
 
-There are many getter and setter functions for assorted cairo objects.
-lgi exports them in the form of method calls as the native C interface
-does, and it also provides property-like access, so that it is
-possible to query or assign named property of the object.  Following
-example demonstrates two identical ways to set and get line width on
-cairo.Context instance:
+Each Cairo object has many getter and setter methods associated with them.
+LuaGObject exports them in the form of method calls just as the native C
+interface does, and it also provides property-like access. It is possible to
+query and assigned to named properties on a Cairo object as with those based
+on GObject. Here are two identical ways of setting the line width of a
+`cairo.Context` instance:
 
     local cr = cairo.Context(surface)
     cr:set_line_width(10)
     print('line width ', cr:get_line_width())
 
+    local cr = cairo.Context(surface)
     cr.line_width = 10
     print('line width ', cr.line_width)
 
-In general, any kind of `get_xxx()` method call on any cairo object
-can be replaced using `xxx` property on the object, and any
-`set_xxx()` method can be replaced by setting `xxx` property.
+Generally speaking, any pair of `get_<name>()` and `set_<name>()` functions will
+be accessible as a property in Cairo through LuaGObject.
 
-### cairo.Surface hierarchy
+### cairo.Surface Hierarchy
 
-Cairo provides basic rendering surface object `cairo.Surface`, and a
-bunch of specialized surfaces implementing rendering to assorted
-targets, e.g. `cairo.ImageSurface`, `cairo.PdfSurface` etc.  These
-surface provide their own class, which is logically inherited from
-`cairo.Surface`.  lgi fully implements this inheritance, so that
-calling `cairo.ImageSurface()` actually creates an instance of
-`cairo.ImageSurface` class, which provides all methods abd properties
-of `cairo.Surface` and and some specialized methods and properties
-like `width` and `height`.
+Cairo's fundamental rendering object is `cairo.Surface`. It also implements
+many more specialized surfaces which implement rendering to specific targets
+(e.g.: `cairo.ImageSurface`, `cairo.PdfSurface`, etc) each providing their
+own class which is logically inherited from `cairo.Surface`. LuaGObject fully
+implements this inheritance, so calling `cairo.ImageSurface()` returns instance
+providing all methods and properties from both `cairo.Surface` and
+`cairo.ImageSurface`.
 
-In addition, lgi always assigns the real type of the surface, so that
-even when `cairo.Context.get_target()` method (or
-`cairo.Context.target` property) is designated as returning
-`cairo.Surface` instance, upon the call the type of the surface is
-queried and proper kind of surface type is really returned.  Following
-example demonstrates that it is possible to query
-`cairo.ImageSurface`-specific `width` property directly on the
-`cairo.Context.target` result.
+Additionally, LuaGObject always tracks the real type of a surface, so that even
+when a method like `cairo.Context.get_target()` (or its associated property,
+`cairo.Context.target`) will return a `cairo.Surface` instance which LuaGObject
+will query to determine which precise surface type is actually returned. The
+following example demonstrates querying a property `.width` of the
+`cairo.ImageSurface` class from a property which is supposed to return an
+instance of the generic `cairo.Surface` class:
 
-    -- Assumes the cr is cairo.Context instance with assigned surface
+    -- Assumes `cr` is a cairo.Context instance with an assigned surface
     print('width of the surface' cr.target.width)
 
-It is also possible to use lgi generic typechecking machinery for
-checking the type of the surface:
+It is also possible to use LuaGObject's typechecking mechanism to check a
+surface's underlying type:
 
     if cairo.ImageSurface:is_type_of(cr.target) then
-	print('width of the surface' cr.target.width)
+        print('width of the surface' cr.target.width)
     else
-	print('unsupported type of the surface')
+        print('unsupported type of the surface')
     end
 
-### cairo.Pattern hierarchy
+### cairo.Pattern Hierarchy
 
-cairo's pattern API actually hides the inheritance of assorted pattern
-types.  lgi binding brings this hierarchy up in the same way as for
-surfaces described in previous section.  Following hierarchy exists:
+Cairo's pattern API hides the inheritance of assorted pattern types.
+LuaGObject's binding exposes this hierarchy in the same way as it does for
+surface types, described in the previous section. The pattern hierarchy is as
+follows:
 
     cairo.Pattern
         cairo.SolidPattern
-	cairo.SurfacePattern
-	cairo.GradientPattern
-	    cairo.LinearPattern
-	    cairo.RadialPattern
-	cairo.MeshPattern
+    cairo.SurfacePattern
+    cairo.GradientPattern
+        cairo.LinearPattern
+        cairo.RadialPattern
+    cairo.MeshPattern
 
-Patterns can be created using static factory methods on
-`cairo.Pattern` as documented in cairo documentation.  In addition,
-lgi maps creation methods to specific subclass constructors, so
-following snippets are equivalent:
+Patterns can be created using static factory methods on `cairo.Pattern` as
+described in Cairo's documentation, but LuaGObject additionally maps creation
+methods to subclass constructors as it does with GObject-based libraries. The
+following snippets are thus equivalent:
 
     local pattern = cairo.Pattern.create_linear(0, 0, 10, 10)
+
     local pattern = cairo.LinearPattern(0, 0, 10, 10)
 
-### cairo.Context path iteration
+### cairo.Context Path Iteration
 
-cairo library offers iteration over the drawing path returned via
-`cairo.Context.copy_path()` method.  Resulting path can be iterated
-using `pairs()` method of `cairo.Path` class.  `pairs()` method
-returns iterator suitable to be used in Lua 'generic for' construct.
-Iterator returns type of the path element, optionally followed by 0, 1
-or 3 points.  Following example shows how to iterate the path.
+The Cairo library offers iteration over drawing paths returned by the
+`cairo.Context.copy_path()` method. The resulting path can be iterated using
+the `:pairs()` method added to the `cairo.Path` class by LuaGObject. It returns
+an iterator suitable for use in Lua's for loop. For each item to be iterated on,
+it returns the type and an array table of either 0, 1, or 3 points. See this
+example of how to iterate on a path:
 
     local path = cr:copy_path()
     for kind, points in path:pairs() do
-       io.write(kind .. ':')
-          for pt in ipairs(points) do
-             io.write((' { %g, %g }'):format(pt.x, pt.y))
-	  end
-       end
+        io.write(kind .. ':')
+        for pt in ipairs(points) do
+            io.write((' { %g, %g }'):format(pt.x, pt.y))
+        end
     end
 
-## Impact of cairo on other libraries
+## Impact of Cairo on Other Libraries
 
-In addition to cairo itself, there is a bunch of cairo-specific
-methods inside Gtk, Gdk and Pango libraries.  lgi wires them up so
-that they can be called naturally as if they were built in to the
-cairo core itself.
+In addition to Cairo itself, there are many Cairo-specific methods inside Gtk,
+Gdk, and Pango. LuaGObject wires them up in such a way that these libraries'
+cairo functions can be called naturally as if they were built into the Cairo
+core itself.
 
 ### Gdk and Gtk
 
 `Gdk.Rectangle` is just a link to `cairo.RectangleInt` (similar to C,
 where `GdkRectangle` is just a typedef of `cairo_rectangle_int_t`).
-`gdk_rectangle_union` and `gdk_rectangle_intersect` are wired as a
-methods of `Gdk.Rectangle` as expected.
+LuaGObject wires up `gdk_rectangle_union` and `gdk_rectangle_intersect` as
+methods of the `Gdk.Rectangle` class as expected.
 
-`Gdk.cairo_create()` is aliased as a method
-`Gdk.Window.cairo_create()`.  `Gdk.cairo_region_create_from_surface()`
-is aliased as `cairo.Region.create_from_surface()`.
+`Gdk.cairo_create()` is aliased to `Gdk.Window.cairo_create()`.
+`Gdk.cairo_region_create_from_surface()` is aliased to
+`cairo.Region.create_from_surface()`.
 
-`cairo.Context.set_source_rgba()` is overriden so that it also accepts
-`Gdk.RGBA` instance as an argument.  Similarly,
-`cairo.Context.rectangle()` alternatively accepts `Gdk.Rectangle` as
-an argument.
+`cairo.Context.set_source_rgba()` is overriden so that it also accepts a
+`Gdk.RGBA` instance as an argument. Similarly, `cairo.Context.rectangle()`
+alternatively accepts `Gdk.Rectangle` as an argument.
 
-`cairo.Context` has additional methods `get_clip_rectangle()`,
-`set_source_color()`, `set_source_pixbuf()`, `set_source_window` and
-`region`, implemented as calls to appropriate `Gdk.cairo_xxx`
+`cairo.Context` has a few additional methods, namely `get_clip_rectangle()`,
+`set_source_color()`, `set_source_pixbuf()`, `set_source_window()` and
+`set_source_region()`, implemented as calls to appropriate `Gdk.cairo_xxx`
 functions.
 
-Since all these extensions are implemented inside Gdk and Gtk
-libraries, they are present only when `lgi.Gdk` is loaded.  When
-loading just pure `lgi.cairo`, they are not available.
+Since all of these extensions are implemented inside Gdk and Gtk libraries,
+they are present only when `LuaGObject.Gdk` is loaded. When loading just pure
+`LuaGObject.cairo`, they are not available.
 
 ### PangoCairo
 
-Pango library contains namespace `PangoCairo` which implements a bunch
-of cairo-specific helper functions to integrate Pango use with cairo
-library.  It is of course possible to call them as global methods of
-PangoCairo interface, however lgi override maps the also to methods
-and attributes of other classes to which they logically belong.
+The Pango font rendering library contains a namespace called `PangoCairo` which
+implements many Cairo-specific helper functions to integrate Pango with Cairo.
+It is possible to call them a global methods of the `PangoCairo` namespace,
+but LuaGObject also overrides these functions to make them available on Pango
+classes to which these methods logically belong.
